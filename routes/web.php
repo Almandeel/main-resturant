@@ -32,6 +32,8 @@ Route::group(['middleware' => 'auth', 'prefix' => 'management'], function() {
     Route::post('stores/suppliers/remove', 'StoreController@removeSupplier')->name('stores.suppliers.remove');
     Route::get('stores/customers/add', 'StoreController@addCustomer')->name('stores.customers.add');
     Route::post('stores/customers/remove', 'StoreController@removeCustomer')->name('stores.customers.remove');
+    Route::resource('categories', 'CategoryController');
+    Route::get('category/{id}', 'CategoryController@subCategory');
     
     Route::post('items/stores/attach/{item}', 'ItemController@attachStore')->name('items.stores.attach');
     Route::post('items/stores/detach/{item}', 'ItemController@detachStore')->name('items.stores.detach');

@@ -4,6 +4,15 @@
     منتج: {{ $item->name }}
 @endsection
 
+@push('css')
+    <style>
+        .barcode {
+            position: relative;
+            right: 39%;
+        }
+    </style>
+@endpush
+
 @section('content')
     @component('partials._breadcrumb')
         @slot('title', ['المنتجات', $item->name])
@@ -15,7 +24,7 @@
                 <div class="box box-primary">
                     <div class="box-header">
                         <h3 class="box-title">
-                            <span>منتج: {{ $item->name }}</span>
+                            <span>منتج: {{ $item->name }}</span> | <span>الماركة : {{ $item->category->name }}</span>
                         </h3>
                     </div>
                     <div class="box-body">
@@ -145,6 +154,15 @@
                         </div>
                     </div>
                 </form>
+
+
+                <div class="box box-primary">
+                    <div style="margin: auto" class="box-body">
+                        <h3>
+                            {!! DNS1D::getBarcodeHTML(number_format($item->barcode), "C128",1.4,44) !!}
+                        </h3>
+                    </div>
+                </div>
             </div>
         </div>
 @endsection

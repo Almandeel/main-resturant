@@ -27,19 +27,22 @@
             </div>
         </div>
         <div class="box-body">
-            <table id="items-table" class="table table-bordered table-hover text-center">
+            <table id="items-table" class="datatable table table-bordered table-hover text-center">
                 <thead>
                     <tr>
+                        <th>الكود</th>
                         <th><i class="fa fa-image"></i></th>
                         <th>المنتج</th>
                         <th>المخازن</th>
                         <th>الوحدات</th>
+                        <th>الماركة</th>
                         <th>الخيارات</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($items as $item)
                         <tr>
+                            <td>{{ $item->barcode }}</td>
                             <td class="text-center">
                                 <span class="image-preview image-preview-inline" style="background-image: url({{ $item->image_url }});"></span>
                             </td>
@@ -53,6 +56,9 @@
                                 @foreach ($item->units as $unit)
                                     <span class="badge bg-green">{{ $unit->name }}</span>
                                 @endforeach
+                            </td>
+                            <td>
+                                {{ $item->category->name }}
                             </td>
                             <td>
                                 @permission('items-read')
