@@ -14,7 +14,10 @@ use Modules\Subscription\Models\Subscription;
 class SubscriptionController extends Controller
 {
     public function dashboard() {
-        return view('subscription::dashboard');
+        $subscriptions      = Subscription::get();
+        $plans              = Plan::all();
+        $customers          = Customer::whereNotIn('id', $subscriptions->where('customer_id', '!=',14)->pluck('customer_id')->toArray())->get();
+        return view('subscription::dashboard', compact('subscriptions', 'plans', 'customers'));
     }
     /**
      * Display a listing of the resource.
@@ -22,7 +25,11 @@ class SubscriptionController extends Controller
      */
     public function index()
     {
-        $subscriptions      = Subscription::all();
+        if(auth()->user()->id == 1) {
+            $subscriptions      = Subscription::with('plan')->orderBy('created_at', 'desc')->paginate();
+        }else {
+            $subscriptions      = Subscription::with('plan')->orderBy('created_at', 'desc')->where('user_id', auth()->user()->id)->whereDate('created_at', date("Y-m-d"))->paginate();
+        }
         $plans              = Plan::all();
         $customers          = Customer::whereNotIn('id', $subscriptions->where('customer_id', '!=',14)->pluck('customer_id')->toArray())->get();
         return view('subscription::subscriptions.index', compact('subscriptions', 'plans', 'customers'));
@@ -50,6 +57,9 @@ class SubscriptionController extends Controller
             'payment_type'      => 'required',
         ]);
 
+        $count = $request->count ?? 1;
+        $subscriptions = [];
+
         $plan = Plan::find($request->plan_id);
         $request_date = $request->all();
         $request_date['start_date'] = Carbon::now('Africa/Khartoum');
@@ -57,9 +67,15 @@ class SubscriptionController extends Controller
         $request_date['user_id'] =  auth()->user()->id;
         $request_date['amount'] =  $plan->amount;
 
-        $subscription = Subscription::create($request_date);
+        for ($i=0; $i < $count; $i++) { 
+            $subscription = Subscription::create($request_date);
+            array_push($subscriptions, $subscription->id);
+        }
 
-        return back()->with('success', 'تمت العملية بنجاح');
+        $subscriptions = Subscription::whereIn('id', $subscriptions)->get();
+
+
+        return view('subscription::subscriptions.barcode', compact('subscriptions'));
     }
 
     /**

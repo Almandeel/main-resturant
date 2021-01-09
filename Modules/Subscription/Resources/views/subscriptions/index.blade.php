@@ -12,19 +12,20 @@
     @endcomponent
     <div class="box">
         <div class="box-header">
+            @if(auth()->user()->id != 1)
+                @php
+                    $cashier = \App\Employee::find(auth()->user()->employee_id);
+                    $opening_entry = $cashier->openingEntry(date('y-m-d'));
+                    $close_entry = $cashier->closeEntry(date('y-m-d'));
+                @endphp
 
-            @php 
-                $cashier = \App\Employee::find(auth()->user()->employee_id);
-                $opening_entry = $cashier->openingEntry(date('y-m-d'));
-                $close_entry = $cashier->closeEntry(date('y-m-d'));
-            @endphp
-
-            @if($opening_entry && !$close_entry)
-                @permission('subscriptions-create')
-                    <button type="button" style="display:inline-block; margin-left:1%" class="btn btn-primary btn-sm pull-right subscription" data-toggle="modal" data-target="#subscription">
-                        <i class="fa fa-plus"> إضافة</i>
-                    </button>
-                @endpermission
+                @if($opening_entry && !$close_entry)
+                    @permission('subscriptions-create')
+                        <button type="button" style="display:inline-block; margin-left:1%" class="btn btn-primary btn-sm pull-right subscription" data-toggle="modal" data-target="#subscription">
+                            <i class="fa fa-plus"> إضافة</i>
+                        </button>
+                    @endpermission
+                @endif
             @endif
 
             @permission('subscriptions-print')
@@ -73,7 +74,6 @@
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i> الغاء الاشتراك</button>
                                     </form>
-
                                     @endpermission
                                 @endif
                             </td>
@@ -81,6 +81,7 @@
                     @endforeach
                 </tbody>
             </table>
+            {{ $subscriptions->links() }}
         </div>
     </div>
 @endsection

@@ -99,7 +99,7 @@
                 'lengthChange': true,
                 'searching'   : true,
                 'ordering'    : true,
-                'info'        : true,
+                'info'        : false,
                 'autoWidth'   : true,
                 'oLanguage'    : {
                     "sEmptyTable":  "@lang('table.sEmptyTable')",

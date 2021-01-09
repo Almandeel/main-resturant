@@ -22,7 +22,7 @@
     </style>
     <style>
                 @media print {
-            button {
+            button , a {
                 display: none !important;
             }
         }
@@ -42,10 +42,22 @@
                     </div>
                 </div>    
             @endforeach
-            <div class="col-md-12" style="margin-top:5%">
+        </div>
+        <div class="row">
+            <div class="col-md-6" style="margin:5% 0">
                 <button onclick="window.print()" class="btn btn-primary btn-block">طباعة</button>
+            </div>
+            <div class="col-md-6" style="margin-top:5%">
+                <a href="{{ route("subscriptions.index") }}" class="btn btn-primary btn-block">عودة</a>
             </div>
         </div>
     </div>
+
+
+    <script>
+        window.onload = (event) => {
+            window.print()
+        };
+    </script>
 </body>
 </html>

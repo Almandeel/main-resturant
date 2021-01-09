@@ -130,7 +130,7 @@ class CashiersController extends Controller
         $opening_entry = $cashier->openingEntry($date);
         $close_entry = $cashier->closeEntry($date);
         // dd($daily_entries, $opening_entry, $close_entry, $adjust_entry);
-        $accounts = Account::where('id', '!=', $account->id)->get();
+        $accounts = Account::where('group_id', 11)->where('id', '!=', $account->id)->get();
         $safes = Safe::all();
         $closing_amount = $orders->sum('amount') + $subscriptions->sum('amount');
         $closing_amount += $opening_entry ? $opening_entry->amount : 0;

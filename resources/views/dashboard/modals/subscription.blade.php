@@ -1,3 +1,4 @@
+
 <div class="modal fade" id="subscription" tabindex="-1" role="dialog" aria-labelledby="subscriptionLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -15,7 +16,7 @@
                 <div class="col-md-12">
                   <div class="form-group" id="customers">
                     <label for="stores">العميل</label>
-                    <select  required class="select2 form-control" name="customer_id" data-parsley-excluded="true">
+                    <select id="customer_id" onchange="counter()"  required class="select2 form-control" name="customer_id" data-parsley-excluded="true">
                       <option value="">اختار العميل</option>
                       @foreach($customers as $customer)
                         <option value="{{ $customer->id }}">{{ $customer->name }}</option>
@@ -25,7 +26,7 @@
                 </div>
   
                 <div class="col-md-12">
-                  <div class="form-group">
+                  <div class="form-group plans">
                     <label for="stores">الباقة</label>
                     <select required class="select2 form-control" name="plan_id" data-parsley-excluded="true">
                       <option value="">اختار الباقة</option>
@@ -47,6 +48,12 @@
                   </select>
                 </div>
               </div>
+              <div class="col-md-12">
+                <div class="form-group " id="count">
+                  <label for="stores">العدد</label>
+                  <input type="number" name="count" class="form-control" placeholder="العدد">
+                </div>
+              </div>
             </div>
           </div>
           <div class="modal-footer">
@@ -62,6 +69,14 @@
 
 
 <script>
+
+  function counter() {
+    if($('#customer_id').val() == 14) {
+      $('#subscription #count').css('display', 'block')
+    }else {
+      $('#subscription #count').css('display', 'none')
+    }
+  }
 
 $('.subscription').click(function() {
       $('#form_subscription input[class="refresh"]').remove()
@@ -123,6 +138,11 @@ $('.subscription').click(function() {
           $('.modal-title').text('إضافة اشتراك')
           $('#form_subscription input[name="customer_id]').remove();
           $('#content-subscription #customers').css('display', 'block')
+
+          if($(this).hasClass("no-plan")) {
+            $('#content-subscription .plans').css('display', 'none')
+            $('#form_subscription').append(`<input type="hidden" name="plan_id" value="${$(this).data('plan')}">`)
+          }
 
 
           $('#content-subscription').css('display', 'block')
