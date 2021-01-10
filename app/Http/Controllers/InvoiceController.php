@@ -32,6 +32,7 @@ class InvoiceController extends Controller
     */
     public function index(Request $request)
     {
+        $limit = $request->limit ? $request->limit : 50;
         $stores = auth()->user()->getStores();
         $customers = auth()->user()->customers();
         $stores_ids = $stores->pluck('id')->toArray();

@@ -247,8 +247,8 @@ class DashboardController extends Controller
         // dd();
         return response()->download(public_path('dashboard/example/example.xlsx'));
     }
-    
-    
+
+
     public function index() {
         if (auth()->user()->roles->contains(Role::cashier()->id) && auth()->user()->roles->count() == 1) {
             return redirect()->route('cashier.dashboard');

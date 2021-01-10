@@ -15,4 +15,8 @@ class TransferStore extends Model
     public function toStore() {
         return $this->belongsTo('App\Store', 'to_store');
     }
+
+    public function items() {
+        return $this->hasMany('App\TransferStoreItem');
+    }
 }

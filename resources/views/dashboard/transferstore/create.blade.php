@@ -66,6 +66,7 @@
                                             <input type="hidden" name="item_store_unit_id[]" value="{{ $item->id }}">
                                         </td>
                                         <td>{{ $item->itemUnit->unit->name }}</td>
+                                        <td>{{ $item->quantity }}</td>
                                         <td>
                                             <input type="number" class="form-control" max="{{ $item->quantity }}" name="quantity[]" value="0">
                                         </td>

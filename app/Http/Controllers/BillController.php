@@ -14,7 +14,7 @@ use App\Cheque;
 use App\Charge;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
-// use JasperPHP\JasperPHP as JasperPHP;
+use JasperPHP\JasperPHP as JasperPHP;
 class BillController extends Controller
 {
     public function __construct()

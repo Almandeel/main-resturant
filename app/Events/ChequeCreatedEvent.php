@@ -15,11 +15,12 @@ class ChequeCreatedEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $cheque;
+    public Cheque $cheque;
 
     /**
      * Create a new event instance.
      *
+     * @param Cheque $cheque
      * @return void
      */
     public function __construct(Cheque $cheque)

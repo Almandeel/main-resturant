@@ -307,6 +307,16 @@ class Invoice extends Model
             $expense->delete();
         }
         foreach($this->invoices as $invoice){
+            $items = $invoice->items;
+            if ($items->count()) {
+                foreach ($items as $item) {
+                    $itemStoreUnit = $item->itemStoreUnit;
+                    if($itemStoreUnit){
+                        $itemStoreUnit->update(['quantity' => $itemStoreUnit->quantity + $item->quantity]);
+                    }
+                    $item->delete();
+                }
+            }
             $invoice->delete();
         }
         foreach($this->entries as $entry){

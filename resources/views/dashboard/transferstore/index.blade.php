@@ -38,6 +38,14 @@
                             <td>
                                 <a class="btn btn-default btn-xs" href="{{ route('transferstores.show', $transfer->id) }}"><i class="fa fa-eye"></i> عرض</a>
                                 {{-- <a class="btn btn-warning btn-xs" href="{{ route('transferstores.edit', $transfer->id) }}"><i class="fa fa-edit"></i> تعديل</a> --}}
+{{--                                <form action="{{ route('transferstores.destroy', $transfer->id) }}" method="post" style="display: inline-block;">--}}
+{{--                                    @method('DELETE')--}}
+{{--                                    @csrf--}}
+{{--                                    <button class="btn btn-danger btn-xs confirm">--}}
+{{--                                        <i class="fa fa-times"></i>--}}
+{{--                                        <span>حذف</span>--}}
+{{--                                    </button>--}}
+{{--                                </form>--}}
                             </td>
                         </tr>
                     @endforeach

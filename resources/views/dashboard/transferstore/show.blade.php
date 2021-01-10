@@ -29,8 +29,18 @@
                                         <tr>
                                             <td>{{ $transferStore->fromStore->name }}</td>
                                             <td>{{ $transferStore->toStore->name }}</td>
-                                            <td>{{ $transferStore->items }}</td>
-                                            <td>{{ $transferStore->created_at }}</td>
+                                            <td>{{ $transferStore->items->count() }}</td>
+                                            <td>{{ $transferStore->created_at->format('Y/m/d') }} {{ $transferStore->created_at->format('h:i')  }} {{ ['am' => 'ص', 'pm' => 'م'][$transferStore->created_at->format('a')] }}</td>
+{{--                                            <td>--}}
+{{--                                                <form action="{{ route('transferstores.destroy', $transferStore->id) }}" method="post" style="display: inline-block;">--}}
+{{--                                                    @method('DELETE')--}}
+{{--                                                    @csrf--}}
+{{--                                                    <button class="btn btn-danger btn-xs confirm">--}}
+{{--                                                        <i class="fa fa-times"></i>--}}
+{{--                                                        <span>حذف</span>--}}
+{{--                                                    </button>--}}
+{{--                                                </form>--}}
+{{--                                            </td>--}}
                                         </tr>
                                     </tbody>
                                 </table>

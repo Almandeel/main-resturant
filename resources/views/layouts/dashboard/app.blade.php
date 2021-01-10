@@ -389,14 +389,13 @@
     @endif
     @include('partials._session')
 
-    {{-- <footer class="main-footer">
+    <footer class="main-footer">
         <div class="pull-right hidden-xs">
-            <b>Version</b> 2.4.0
+            <b>Version</b> 1.1.0
         </div>
-        <strong>Copyright &copy; 2014-2016
-            <a href="https://adminlte.io">Almsaeed Studio</a>.</strong> All rights
-        reserved.
-    </footer> --}}
+        <strong>كل الحقوق محفوظة &copy; <script>document.write(data('Y'))</script>
+            <a href="#"></a></strong> 
+    </footer>
 
 </div><!-- end of wrapper -->
 
@@ -434,11 +433,15 @@
         });
     </script>
 @endif
-    <link href="{{ asset('dashboard/plugins/jquery-editable-select/dist/jquery-editable-select.min.css') }}" rel="stylesheet">
-    <script src="{{ asset('dashboard/plugins/jquery-editable-select/dist/jquery-editable-select.min.js') }}"></script>
+
 <script>
     $(document).ready(function () {
-        $('select.editable').editableSelect();
+        $('.btn-cheque-confirm').click(function (e) {
+            e.preventDefault();
+            let confirmed = confirm('سوف يتم تأكيد الشيك استمرار؟');
+            if (confirmed) $(this).closest('form').submit();
+        });
+
         $('.showResetModal').click(function(){
             $('#resetModal').modal('show')
         })
