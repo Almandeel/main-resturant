@@ -41,18 +41,17 @@ class InvoiceController extends Controller
         $to_date = $request->to_date ? $request->to_date : date('Y-m-d');
         $store_id = $request->store_id ? $request->store_id : 'all';
         $customer_id = $request->customer_id ? $request->customer_id : 'all';
-        $invoices = Invoice::whereNull('invoice_id');
-        $from_date = !isset($request->from_date) && $invoices->get()->count() ? $invoices->get()->first()->created_at->format('Y-m-d') : $from_date;
-        $to_date = !isset($request->from_date) && $invoices->get()->count() ? $invoices->get()->last()->created_at->format('Y-m-d') : $from_date;
-        
+        $invoices = Invoice::with('user')->with('customer')->with('store')->whereNull('invoice_id')->limit($limit);
+        // $from_date = !isset($request->from_date) && $invoices->get()->count() ? $invoices->get()->first()->created_at->format('Y-m-d') : $from_date;
+        // $to_date = !isset($request->from_date) && $invoices->get()->count() ? $invoices->get()->last()->created_at->format('Y-m-d') : $from_date;
         
         $fromDate = $from_date . ' 00:00:00';
         $toDate = $to_date . ' 23:59:59';
         $invoices = $invoices->whereBetween('created_at', [$fromDate, $toDate])->orderBy('created_at', 'DESC');
         if(!isset($request->store_id) || $request->store_id == 'all'){
-            $stores_invoices = Invoice::whereBetween('created_at', [$fromDate, $toDate])->whereNull('invoice_id')->whereIn('store_id', $stores_ids)->get();
+            $stores_invoices = Invoice::with('user')->with('customer')->with('store')->whereBetween('created_at', [$fromDate, $toDate])->whereNull('invoice_id')->whereIn('store_id', $stores_ids)->limit($limit)->get();
             $bills = Bill::whereBetween('created_at', [$fromDate, $toDate])->whereNull('bill_id')->whereIn('store_id', $stores->pluck('id')->toArray())->get();
-            $out_invoices = Invoice::whereBetween('created_at', [$fromDate, $toDate])->whereNull('invoice_id')->whereIn('bill_id', $bills->pluck('id')->toArray())->get();
+            $out_invoices = Invoice::with('user')->with('customer')->with('store')->whereBetween('created_at', [$fromDate, $toDate])->whereNull('invoice_id')->whereIn('bill_id', $bills->pluck('id')->toArray())->limit($limit)->get();
             $invoices = $stores_invoices->merge($out_invoices);
         }
         else if($request->store_id == 'out'){
@@ -60,7 +59,7 @@ class InvoiceController extends Controller
             $invoices = $invoices->whereIn('bill_id', $bills->pluck('id')->toArray())->get();
         }
         else{
-            $invoices = $invoices->where('store_id', $store_id)->whereNull('invoice_id')->orderBy('created_at', 'DESC')->get();
+            $invoices = $invoices->where('store_id', $store_id)->orderBy('created_at', 'DESC')->get();
         }
         
         if(!isset($request->customer_id) || $request->customer_id == 'all'){
@@ -85,8 +84,9 @@ class InvoiceController extends Controller
         }
         
         $invoices = $invoices->sortByDesc('created_at');
-        $advanced_search = isset($request->from_date) || isset($request->store_id) || isset($request->customer_id) || isset($request->is_delivered) || isset($request->is_payed);
-        return view('dashboard.invoices.index', compact('advanced_search', 'stores', 'store_id', 'is_delivered', 'is_payed', 'customers', 'customer_id', 'invoices', 'from_date', 'to_date'));
+        // $advanced_search = isset($request->from_date) || isset($request->store_id) || isset($request->customer_id) || isset($request->is_delivered) || isset($request->is_payed);
+        $advanced_search = true;
+        return view('dashboard.invoices.index', compact('advanced_search', 'limit', 'stores', 'store_id', 'is_delivered', 'is_payed', 'customers', 'customer_id', 'invoices', 'from_date', 'to_date'));
         
     }
     

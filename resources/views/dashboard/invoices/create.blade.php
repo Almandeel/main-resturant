@@ -278,29 +278,31 @@
 		@if (!$invoice)
 			var items = new Array();
 			var options = "";
-			@foreach ($store->items as $item)
-				var item = new Item({{$item->pivot->id}}, "{{$item->name}}");
-				@foreach ($item->units as $unit)
-					@php
-						$itemStoreUnit = $store->itemStoreUnit($item->pivot->id, $unit->pivot->id);
-						$itemStoreUnit = $itemStoreUnit ? $itemStoreUnit->quantity > 0 ? $itemStoreUnit : null : null;
-					@endphp
-					@if ($itemStoreUnit)
-						var unit;
-						unit = new Unit("{{ $unit->pivot->id }}", "{{ $item->name }}", "{{ $unit->name }}");
-						unit.id = {{ $itemStoreUnit->id }};
-						unit.quantity = {{ $itemStoreUnit->quantity }};
-						unit.price_purchase = '{{ number_format($itemStoreUnit->price_purchase, 2) }}';
-						unit.price_sell = '{{ number_format($itemStoreUnit->price_sell, 2) }}';
-						item.units[unit.id] = unit;						
-					@endif
+			@if($store)
+				@foreach ($store->items as $item)
+					var item = new Item({{$item->pivot->id}}, "{{$item->name}}");
+					@foreach ($item->units as $unit)
+						@php
+							$itemStoreUnit = $store->itemStoreUnit($item->pivot->id, $unit->pivot->id);
+							$itemStoreUnit = $itemStoreUnit ? $itemStoreUnit->quantity > 0 ? $itemStoreUnit : null : null;
+						@endphp
+						@if ($itemStoreUnit)
+							var unit;
+							unit = new Unit("{{ $unit->pivot->id }}", "{{ $item->name }}", "{{ $unit->name }}");
+							unit.id = {{ $itemStoreUnit->id }};
+							unit.quantity = {{ $itemStoreUnit->quantity }};
+							unit.price_purchase = '{{ number_format($itemStoreUnit->price_purchase, 2) }}';
+							unit.price_sell = '{{ number_format($itemStoreUnit->price_sell, 2) }}';
+							item.units[unit.id] = unit;						
+						@endif
+					@endforeach
+					item.units.removeAll(undefined)
+					if(item.units.length > 0){
+						items[item.id] = item;
+						options += "<option value='"+item.id+"'>"+item.name+"</option>";
+					}
 				@endforeach
-				item.units.removeAll(undefined)
-				if(item.units.length > 0){
-					items[item.id] = item;
-					options += "<option value='"+item.id+"'>"+item.name+"</option>";
-				}
-			@endforeach
+			@endif
 			items.removeAll(undefined)
 			$(function () {
 				$("tbody" ).sortable({
