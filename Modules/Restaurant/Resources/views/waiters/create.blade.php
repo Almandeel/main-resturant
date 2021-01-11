@@ -26,7 +26,12 @@
 
                 <div class="form-group">
                     <label>@lang('restaurant::global.address')</label>
-                    <input type="text" class="form-control" name="address" value="{{ old('address')  }}" placeholder="@lang('restaurant::global.address')">
+                    <input type="text" class="form-control" name="address" required value="{{ old('address')  }}" placeholder="@lang('restaurant::global.address')">
+                </div>
+
+                <div class="form-group">
+                    <label>@lang('restaurant::global.salary')</label>
+                    <input type="number" class="form-control" name="salary" required value="{{ old('salary')  }}" placeholder="@lang('restaurant::global.salary')">
                 </div>
             </div>
             <div class="box-footer">

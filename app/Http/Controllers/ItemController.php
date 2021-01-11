@@ -99,8 +99,6 @@ class ItemController extends Controller
             }
         }
         
-        
-        
         return redirect()->route('items.index')->with('success', 'تمت العملية بنجاح');
     }
     

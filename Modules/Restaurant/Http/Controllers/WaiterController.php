@@ -2,6 +2,7 @@
 
 namespace Modules\Restaurant\Http\Controllers;
 
+use App\Employee;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Restaurant\Models\Waiter;
@@ -47,10 +48,13 @@ class WaiterController extends Controller
         request()->validate([
             'name'      => 'required | string | max:100 | min:3',
             'phone'     => 'required | string | min:10',
-            'address'     => 'nullable | string',
+            'address'   => 'required | string',
+            'salary'    => 'required | string',
         ]);
 
-        $waiter = Waiter::create($request->all());
+        $employee = Employee::create($request->only(['name', 'phone', 'address','salary']));
+
+        $waiter = Waiter::create($request->except('salary'));
 
         session()->flash('success', 'restaurant::global.create_success');
 

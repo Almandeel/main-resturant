@@ -2,6 +2,7 @@
 
 namespace Modules\Restaurant\Http\Controllers;
 
+use App\Employee;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Restaurant\Models\Driver;
@@ -47,10 +48,13 @@ class DriverController extends Controller
         request()->validate([
             'name'      => 'required | string | max:100 | min:3',
             'phone'     => 'required | string | min:10|regex:/^[0-9]+$/',
-            'address'     => 'nullable | string',
+            'address'     => 'required | string',
+            'salary'     => 'required | string',
         ]);
 
-        $driver = Driver::create($request->all());
+        $employee = Employee::create($request->only(['name', 'phone', 'address','salary']));
+
+        $driver = Driver::create($request->except('salary'));
 
         session()->flash('success', 'restaurant::global.create_success');
 
