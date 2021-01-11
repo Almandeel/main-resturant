@@ -15,4 +15,10 @@ class Unit extends Model
         return $this->belongsToMany(Item::class)->withPivot('id', 'price');
         // return $this->belongsToMany('App\Item')->withPivot('quantity', 'pric');
     }
+
+    public function itemUnit()
+    {
+        return $this->belongsTo(ItemUnit::class);
+        // return $this->belongsToMany('App\Item')->withPivot('quantity', 'pric');
+    }
 }

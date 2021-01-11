@@ -75,7 +75,7 @@
                     </div>  --}}
                     <div class="col-xs-12 col-md-6">
                         <h3>المخازن</h3>
-                        <table id="stores-table" class="table table-striped table-hover">
+                        <table style="margin-bottom:2%" id="stores-table" class="table table-striped table-hover">
                             <thead>
                                 <tr>
                                     <th>#</th>
@@ -84,18 +84,15 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($stores as $store)
-                                    <tr>
-                                        <td>{{ $loop->index + 1 }}</td>
-                                        <td>{{ $store->name }}</td>
-                                        <td class="text-center">
-                                            <input type="hidden" name="stores_names[]" value="{{ $store->name }}">
-                                            <button type="button" class="btn btn-danger btn-remove-store">
-                                                <i class="fa fa-times"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                @endforeach
+                                <div class="stores">
+                                    @foreach($stores as $store)
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <input type="checkbox" name="stores_names[]" value="{{ $store->name }}"> {{ $store->name }}
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
                             </tbody>  
                             <tfoot>
                                 <tr>
@@ -112,26 +109,28 @@
                             </tfoot>   
                         </table>    
                     </div>
-                    <div class="col-xs-12 col-md-6">
+                    <div style="border-right:1px solid #3c8dbc" class="col-xs-12 col-md-6">
                         <h3>الوحدات</h3>
                         <table id="units-table" class="table table-striped table-hover">
                             <thead>
                                 <tr>
                                     <th>#</th>
                                     <th>الوحدة</th>
-                                    <th>السعر</th>
                                     <th style="width: 60px; text-align: center;"><i class="fa fa-times"></i></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach($units as $unit)
-                                    <tr>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <input type="checkbox" name="units_names[]" value="{{ $unit->name }}"/>   {{ $unit->name }}                                      </div>
+                                        </div>
+                                    {{-- <tr>
                                         <td>{{ $loop->index + 1 }}</td>
                                         <td>{{ $unit->name }}</td>
                                         <td>
                                             <div class="input-group">
-                                                <input type="hidden" name="units_names[]" value="{{ $unit->name }}"/>
-                                                <input type="number" name="units_prices[]" class="form-control" min="0" value="0" placeholder="سعر الوحدة">
+                                                
                                             </div>
                                         </td>
                                         <td>
@@ -139,7 +138,7 @@
                                                 <i class="fa fa-times"></i>
                                             </button>
                                         </td>
-                                    </tr>
+                                    </tr> --}}
                                 @endforeach
                             </tbody>
                             <tfoot>
@@ -148,9 +147,9 @@
                                     <th>
                                         <input type="text" class="form-control new-unit-name" placeholder="اسم الوحدة">
                                     </th>
-                                    <th>
+                                    {{-- <th>
                                         <input type="number" class="form-control new-unit-price" placeholder="سعر الوحدة">
-                                    </th>
+                                    </th> --}}
                                     <th>
                                         <button type="button" class="btn btn-primary btn-add-unit">
                                             <i class="fa fa-plus"></i>

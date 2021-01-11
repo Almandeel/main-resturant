@@ -53,11 +53,19 @@ class ItemController extends Controller
     */
     public function store(Request $request)
     {
+        // dd($request->all());
         $request->validate([
         'name' => 'required | string | max:45',
         'image' => 'mimes:jpg,jpeg,png,gif|max:2048',
         ]);
-        $data = $request->only(['name', 'barcode']);
+        $data = $request->only(['name']);
+
+        if($request->barcode) {
+            $data['barcode'] = $request->barcode;
+        }else {
+            $last_barcode = Item::latest()->first()->barcode;
+            $data['barcode'] = $last_barcode + 1;
+        }
 
         if($request->sub_category) {
             $data['category_id'] = $request->sub_category;
@@ -81,14 +89,13 @@ class ItemController extends Controller
             }
         }
         
-        if ($request->has(['units_names', 'units_prices'])) {
+        if ($request->has(['units_names'])) {
             for ($i=0; $i < count($request->units_names); $i++) {
                 $unit_name = $request->units_names[$i];
-                $unit_price = $request->units_prices[$i];
-                if ($unit_price) {
-                    $unit = Unit::firstOrCreate(['name' => $unit_name]);
-                    $item->units()->attach($unit->id, ['price' => $unit_price]);
-                }
+                // $unit_price = $request->units_prices[$i] ?? 0;
+
+                $unit = Unit::firstOrCreate(['name' => $unit_name]);
+                $item->units()->attach($unit->id, ['price' => $unit->itemUnit ? $unit->itemUnit->price : 0]);
             }
         }
         
@@ -118,7 +125,8 @@ class ItemController extends Controller
     {
         $stores = Store::all();
         $units = Unit::all();
-        return view('dashboard.items.edit', compact('item', 'stores', 'units'));
+        $categories = Category::whereNull('parent_id')->get();
+        return view('dashboard.items.edit', compact('item', 'stores', 'units', 'categories'));
     }
     
     /**
@@ -136,6 +144,13 @@ class ItemController extends Controller
         ]);
         
         $data = $request->only(['name', 'barcode']);
+
+        if($request->sub_category) {
+            $data['category_id'] = $request->sub_category;
+        }else {
+            $data['category_id'] = $request->parent_category;
+        }
+
         if ($request->has('image')) {
             $fileName = time().'.'.$request->image->extension();
             
@@ -154,15 +169,13 @@ class ItemController extends Controller
             }
         }
         
-        if ($request->has(['units_names', 'units_prices'])) {
+        if ($request->has(['units_names'])) {
             $item->units()->detach();
             for ($i=0; $i < count($request->units_names); $i++) {
                 $unit_name = $request->units_names[$i];
-                $unit_price = $request->units_prices[$i];
-                if ($unit_price) {
+                // $unit_price = $request->units_prices[$i];
                     $unit = Unit::firstOrCreate(['name' => $unit_name]);
-                    $item->units()->attach($unit->id, ['price' => $unit_price]);
-                }
+                    $item->units()->attach($unit->id, ['price' => $unit->itemUnit ? $unit->itemUnit->price : 0]);
             }
         }
         

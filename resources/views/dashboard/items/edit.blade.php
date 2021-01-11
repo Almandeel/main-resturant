@@ -21,10 +21,40 @@
                 </h3>
             </div>
             <div class="box-body">
-                <div class="form-group">
-                    <label>الاسم</label>
-                    <input class="form-control name" required type="text" name="name" value="{{ $item->name }}" placeholder="الاسم">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>الاسم</label>
+                            <input class="form-control name" required type="text" name="name" value="{{ $item->name }}" placeholder="الاسم">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>الكود</label>
+                            <input class="form-control" type="text" name="barcode" placeholder="الكود" value="{{ $item->barcode }}" >
+                        </div>
+                    </div>
                 </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>القسم</label>
+                            <select id="parent-category" name="parent_category" onchange="getCategory(this.value)" class="form-control">
+                                @foreach ($categories as $category)
+                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>الماركة</label>
+                            <select id="category" name="sub_category" class="form-control"></select>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <div class="image-wrapper">
                         <div class="image-previewer" style="background-image: url({{ $item->image_url }});"></div>
@@ -39,14 +69,14 @@
                     {{--  <div class="col-xs-12 col-md-6">
                         <label for="stores">المخازن</label>
                         <select class="select2 form-control" name="stores[]" id="stores" multiple>
-                            @foreach($item->stores as $store)
+                            @foreach($stores as $store)
                             <option value="{{ $store->id }}">{{ $store->name }}</option>
                             @endforeach
                         </select>
                     </div>  --}}
                     <div class="col-xs-12 col-md-6">
                         <h3>المخازن</h3>
-                        <table id="stores-table" class="table table-striped table-hover">
+                        <table style="margin-bottom:2%" id="stores-table" class="table table-striped table-hover">
                             <thead>
                                 <tr>
                                     <th>#</th>
@@ -55,28 +85,21 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($item->stores as $store)
-                                    <tr>
-                                        <td>{{ $loop->index + 1 }}</td>
-                                        <td>{{ $store->name }}</td>
-                                        <td class="text-center">
-                                            <input type="hidden" name="stores_names[]" value="{{ $store->name }}">
-                                            <button type="button" class="btn btn-danger btn-remove-store">
-                                                <i class="fa fa-times"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                @endforeach
+                                <div class="stores">
+                                    @foreach($stores as $store)
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <input type="checkbox" name="stores_names[]"  {{ in_array($store->id, $item->stores->pluck("id")->toArray()) ? "checked" : ""  }} value="{{ $store->name }}"> {{ $store->name }}
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
                             </tbody>  
                             <tfoot>
                                 <tr>
                                     <th><i class="fa fa-plus"></i></th>
                                     <th>
-                                        <select class="form-control new-store-name editable">
-                                            @foreach ($stores as $store)
-                                                <option value="{{ $store->name }}">{{ $store->name }}</option>
-                                            @endforeach
-                                        </select>
+                                        <input type="text" class="form-control new-store-name" placeholder="اسم المخزن">
                                     </th>
                                     <th>
                                         <button type="button" class="btn btn-primary btn-add-store">
@@ -87,26 +110,28 @@
                             </tfoot>   
                         </table>    
                     </div>
-                    <div class="col-xs-12 col-md-6">
+                    <div style="border-right:1px solid #3c8dbc" class="col-xs-12 col-md-6">
                         <h3>الوحدات</h3>
                         <table id="units-table" class="table table-striped table-hover">
                             <thead>
                                 <tr>
                                     <th>#</th>
                                     <th>الوحدة</th>
-                                    <th>السعر</th>
                                     <th style="width: 60px; text-align: center;"><i class="fa fa-times"></i></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($item->units as $unit)
-                                    <tr>
+                                @foreach($units as $unit)
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <input type="checkbox" name="units_names[]" {{ in_array($unit->id, $item->units->pluck("id")->toArray()) ? "checked" : ""  }} value="{{ $unit->name }}"/>   {{ $unit->name }}                                      </div>
+                                        </div>
+                                    {{-- <tr>
                                         <td>{{ $loop->index + 1 }}</td>
                                         <td>{{ $unit->name }}</td>
                                         <td>
                                             <div class="input-group">
-                                                <input type="hidden" name="units_names[]" value="{{ $unit->name }}"/>
-                                                <input type="number" name="units_prices[]" class="form-control" value="{{ $unit->pivot->price }}" min="0" placeholder="سعر الوحدة">
+                                                
                                             </div>
                                         </td>
                                         <td>
@@ -114,22 +139,18 @@
                                                 <i class="fa fa-times"></i>
                                             </button>
                                         </td>
-                                    </tr>
+                                    </tr> --}}
                                 @endforeach
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <th><i class="fa fa-plus"></i></th>
                                     <th>
-                                        <select class="form-control new-unit-name editable">
-                                            @foreach ($units as $unit)
-                                                <option value="{{ $unit->name }}">{{ $unit->name }}</option>
-                                            @endforeach
-                                        </select>
+                                        <input type="text" class="form-control new-unit-name" placeholder="اسم الوحدة">
                                     </th>
-                                    <th>
+                                    {{-- <th>
                                         <input type="number" class="form-control new-unit-price" placeholder="سعر الوحدة">
-                                    </th>
+                                    </th> --}}
                                     <th>
                                         <button type="button" class="btn btn-primary btn-add-unit">
                                             <i class="fa fa-plus"></i>
@@ -149,6 +170,17 @@
 @endsection
 @push('js')
     <script>
+        function getCategory(id) {
+            $.ajax({
+                url : "{{ url('management/category') }}" + '/' + id,
+            }).done(function(data) {
+            $('#category').html('')
+            
+            $.each(data, function( index, value ) {
+                    $('#category').append(`<option value="${value.id}">${value.name}</option>`)
+                });
+            });
+        }
         $(function(){
             $('.check-all-stores').change(function(){
                 $('.check-all-stores').prop('checked', $(this).prop('checked'))
@@ -239,6 +271,9 @@
                     }
                 }
             })
+
+            getCategory($('#parent-category').val())
+
         })
     </script>
 @endpush

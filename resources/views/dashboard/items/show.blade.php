@@ -159,7 +159,7 @@
                 <div class="box box-primary">
                     <div style="margin: auto" class="box-body">
                         <h3>
-                            {!! DNS1D::getBarcodeHTML(number_format($item->barcode), "C128",1.4,44) !!}
+                            {!! DNS1D::getBarcodeHTML($item->barcode, "C128",1.4,44) !!}
                         </h3>
                     </div>
                 </div>
