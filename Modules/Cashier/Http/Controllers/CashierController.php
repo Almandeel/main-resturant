@@ -2,13 +2,15 @@
 
 namespace Modules\Cashier\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
-use Modules\Restaurant\Models\{Menu, Waiter, Driver, Table, Order};
 use App\{Item, ItemUnit};
-use App\{Employee, Transaction};
+use Illuminate\Http\Request;
 use App\{Account, Entry, Safe};
+use App\{Employee, Transaction};
+use Illuminate\Routing\Controller;
+use Illuminate\Contracts\Support\Renderable;
+use Modules\Subscription\Models\Subscription;
+use Modules\Restaurant\Models\{Menu, Waiter, Driver, Table, Order};
+
 class CashierController extends Controller
 {
     /**
@@ -70,6 +72,7 @@ class CashierController extends Controller
         $cashier = $user->employee;
         $account = $cashier->account;
         $builder = Order::where('user_id', $user->id)->orderBy('updated_at');
+        $builder_subscription = Subscription::where('user_id', $user->id)->orderBy('updated_at');
         $date = $request->has('date') ? $request->date : date('Y-m-d');
         $to_date = $date;
         
@@ -81,6 +84,9 @@ class CashierController extends Controller
         $to_date_time = $to_date . ' 23:59:59';
         
         $builder->whereBetween('created_at', [$date_time, $to_date_time]);
+
+        $builder_subscription->whereBetween('created_at', [$date_time, $to_date_time]);
+
         
         if ($type != 'all') {
             $builder->where('type', Order::getTypeValue($type));
@@ -95,6 +101,8 @@ class CashierController extends Controller
         /*->groupBy(function($order) {
         return Carbon::parse($order->created_at)->format('Y-m-d');
         });*/
+
+        $subscriptions = $builder_subscription->get();
         
         $daily_entries = $cashier->dailyEntries($date);
         $opening_entry = $cashier->openingEntry($date);
@@ -102,7 +110,7 @@ class CashierController extends Controller
         // dd($daily_entries, $opening_entry, $close_entry, $adjust_entry);
         $accounts = Account::where('id', '!=', $account->id)->get();
         $safes = Safe::all();
-        $closing_amount = $orders->sum('amount');
+        $closing_amount = $orders->sum('amount') + $subscriptions->sum('amount');
         $closing_amount += $opening_entry ? $opening_entry->amount : 0;
         $deducation = null;
         if ($close_entry) {
@@ -110,6 +118,6 @@ class CashierController extends Controller
             $close_date_time_plus_2_minutes = $close_entry->created_at->addMinutes(2);
             $deducation = Transaction::where('employee_id', $cashier->id)->where('type', Transaction::TYPE_DEDUCATION)->whereBetween('created_at', [$close_date_time->toDateTimeString(), $close_date_time_plus_2_minutes->toDateTimeString()])->first();
         }
-        return view('cashier::safe', compact('cashier', 'user', 'orders', 'safes', 'accounts', 'account', 'deducation', 'type', 'status', 'date', 'closing_amount', 'to_date', 'daily_entries', 'opening_entry', 'close_entry'));
+        return view('cashier::safe', compact('cashier', 'user', 'orders', 'safes', 'accounts', 'account', 'deducation', 'type', 'status', 'date', 'closing_amount', 'to_date', 'daily_entries', 'opening_entry', 'close_entry', 'subscriptions'));
     }
 }

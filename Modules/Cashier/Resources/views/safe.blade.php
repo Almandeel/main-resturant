@@ -184,6 +184,52 @@
                     <th colspan="2"></th>
                 </tfoot>
             </table>
+
+            <h4 style="margin-top:3%">
+                <i class="icon-order"></i>
+                <span>الاشتراكات</span>
+            </h4>
+            <table id="subscription-table" class="table table-bordered table-striped table-hover datatable">
+                <thead>
+                    <tr>
+                        <th>تاريخ الإنشاء</th>
+                        <th>رقم الاشتراك</th>
+                        <th>العميل</th>
+                        <th>الباقة</th>
+                        <th>المبلغ</th>
+                        <th>الخيارات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @php 
+                        $total = 0;
+                    @endphp
+                    @foreach ($subscriptions as $subscription)
+                        <tr>
+                            <td>{{ $subscription->created_at->format('Y-m-d') }}</td>
+                            <td>{{ $subscription->id }}</td>
+                            <td>{{ $subscription->customer->name }}</td>
+                            <td>{{ $subscription->plan->name }}</td>
+                            <td class="subscriptions-total">{{ number_format($subscription->amount, 2) }}</td>
+                            <td>
+                                @permission('subscriptions-read')
+                                    <a href="{{ route('subscriptions.show', $subscription->id) }}" class="btn btn-info btn-sm"><i class="fa fa-eye">عرض</i></a>
+                                @endpermission
+                                @permission('subscriptions-print')
+                                    <a href="{{ route('subscriptions.barcodes', $subscription->id) }}" class="btn btn-default btn-sm print" > <i class="fa fa-print"> طباعة </i></a>
+                                @endpermission
+                            </td>
+                        </tr>
+                        @php 
+                            $total += $subscription->amount;
+                        @endphp
+                    @endforeach
+                </tbody>
+                <tfoot>
+                    <th colspan="4">إجمالي كل الاشتراكات</th>
+                    <th class="subscriptions-net">{{ number_format($total, 2) }}</th>
+                </tfoot>
+            </table>
         </div>
         <div class="box-footer">
             <h4>
