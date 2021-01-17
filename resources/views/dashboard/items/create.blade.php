@@ -198,20 +198,12 @@
                     alert('ادخل اسم الوحدة ')
                     unit_name.focus()
                 }
-                else if(!unit_price.val()){
-                    alert('ادخل سعر الوحدة ')
-                    unit_price.focus()
-                }else{
+                else{
                     let row = `
                         <tr>
                             <td>`+ (units_table_body.children().length + 1) +`</td>
                             <td>`+ unit_name.val() +`</td>
-                            <td>
-                                <div class="input-group">
-                                    <input type="hidden" name="units_names[]" value="`+ unit_name.val() +`">
-                                    <input type="number" class="form-control" placeholder="سعر الوحدة" name="units_prices[]" min="1" value="`+ unit_price.val() +`">
-                                </div>
-                            </td>
+                            
                             <td>
                                 <button type="button" class="btn btn-danger btn-remove-unit">
                                     <i class="fa fa-times"></i>
