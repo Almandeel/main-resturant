@@ -1,4 +1,4 @@
-@extends('layouts.dashboard.app', ['select2' => true, 'datatable' => true])
+@extends('layouts.dashboard.app', ['datatable' => true])
 
 @section('title')
 المخازن
@@ -96,7 +96,7 @@
             </div>
             @permission('users-read')
             <div class="tab-pane {{ (session('tab') == 'users') ? 'active' : '' }}" id="tab-users">
-                <table id="users-table" class="datatable table table-bordered table-hover text-center">
+                <table id="users-table" class=" table table-bordered table-hover text-center">
                     <thead>
                         <tr>
                             <th>اسم</th>
@@ -128,7 +128,7 @@
             @endpermission
             @permission('suppliers-read')
             <div class="tab-pane {{ (session('tab') == 'suppliers') ? 'active' : '' }}" id="tab-suppliers">
-                <table id="suppliers-table" class="datatable table table-bordered table-hover text-center">
+                <table id="suppliers-table" class=" table table-bordered table-hover text-center">
                     <thead>
                         <tr>
                             <th>اسم</th>
@@ -165,7 +165,7 @@
             @endpermission
             @permission('customers-read')
             <div class="tab-pane {{ (session('tab') == 'customers') ? 'active' : '' }}" id="tab-customers">
-                <table id="customers-table" class="datatable table table-bordered table-hover text-center">
+                <table id="customers-table" class=" table table-bordered table-hover text-center">
                     <thead>
                         <tr>
                             <th>اسم</th>
