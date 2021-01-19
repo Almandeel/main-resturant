@@ -538,7 +538,7 @@
 {{-- Include dataTable component when variable passed in the page --}}
 @includeWhen(isset($datatable), 'partials._datatabe')
 
-@if(isset($select2))
+
     <link href="{{ asset('dashboard/css/select2.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('dashboard/css/select2.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('dashboard/css/select2-bootstrap.css') }}" rel="stylesheet" />
@@ -580,7 +580,7 @@
             });
           })
     </script>
-@endif
+
     <script src="{{ asset('js/custom.js') }}"></script>
     @stack('js')
 </body>

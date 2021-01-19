@@ -1,4 +1,4 @@
-@extends('layouts.dashboard.app', ['modals' => ['subscription'],'datatable' => true])
+@extends('layouts.dashboard.app', ['modals' => ['subscription'], 'datatable' => true ])
 
 @section('title')
     الاشتراكات

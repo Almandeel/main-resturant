@@ -17,7 +17,6 @@
                   <div class="form-group" id="customers">
                     <label for="stores">العميل</label>
                     <select id="customer_id" onchange="counter()"  required class="select2 form-control" name="customer_id" data-parsley-excluded="true">
-                      <option value="">اختار العميل</option>
                       @foreach($customers as $customer)
                         <option value="{{ $customer->id }}">{{ $customer->name }}</option>
                       @endforeach
@@ -71,12 +70,17 @@
 <script>
 
   function counter() {
-    if($('#customer_id').val() == 14) {
+    if($('#customer_id').val() == 18) {
       $('#subscription #count').css('display', 'block')
     }else {
       $('#subscription #count').css('display', 'none')
     }
   }
+
+
+  $(function () {
+    counter()
+  })
 
 $('.subscription').click(function() {
       $('#form_subscription input[class="refresh"]').remove()
