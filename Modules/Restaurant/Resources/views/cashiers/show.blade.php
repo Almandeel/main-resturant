@@ -98,7 +98,7 @@
                 <i class="icon-order"></i>
                 <span>الطلبات</span>
             </h4>
-            <table id="orders-table" class="table table-bordered table-striped table-hover datatable">
+            <table id="orders-table" class="table table-bordered table-striped table-hover datatable text-center">
                 <thead>
                     <tr>
                         <th>تاريخ الإنشاء</th>
@@ -114,7 +114,7 @@
                 </thead>
                 <tbody>
                     @foreach ($orders as $order)
-                        <tr>
+                        <tr @if($order->discount > 0) style="background-color:#f39d2ff0; font-weight:bold"  @endif>
                             <td>{{ $order->created_at->format('Y/m/d') }}</td>
                             <td>{{ $order->number }}</td>
                             <td>{{ $order->displayType() }}</td>
@@ -123,7 +123,7 @@
                             <td class="order-total">{{ number_format($order->total, 2) }}</td>
                             <td class="order-discount">{{ number_format($order->discount, 2) }}</td>
                             <td class="order-net">{{ number_format($order->net, 2) }}</td>
-                            <td>
+                            <td style="background-color:#fff !important;">
                                 @permission('orders-read')
                                     <a href="{{ route('cashier.orders.show', $order) }}" class="btn btn-info">
                                         <i class="fa fa-eye"></i>
