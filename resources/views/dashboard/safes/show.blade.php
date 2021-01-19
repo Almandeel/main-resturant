@@ -32,7 +32,7 @@
                                 <form action="{{ route('transfers.store') }}" method="POST" class="form-inline">
                                     @csrf
                                     <label for="amount">رصيد افتتاحي</label>
-                                    <input type="number" name="amount" id="amount" class="form-control" /> {{-- max="{{ App\Account::capital()->balance() }}" required /> --}}
+                                    <input type="number" name="amount" id="amount" class="form-control" max="{{ $capital }}"/> {{-- max="{{ App\Account::capital()->balance() }}" required /> --}}
                                     <button type="submit" class="btn btn-secondary">
                                         <i class="fa fa-plus"></i>
                                         <span>اضافة</span>

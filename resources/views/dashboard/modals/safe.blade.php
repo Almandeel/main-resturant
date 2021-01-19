@@ -24,7 +24,7 @@
 			  </div>
               <div class="form-group">
                   <label>الرصيد الافتتاحي</label>
-                  <input  class="form-control" type="number" name="opening_balance" placeholder="الرصيد الافتتاحي" />
+                  <input  class="form-control" type="number" name="opening_balance" placeholder="الرصيد الافتتاحي" min="0" max="{{ $capital }}" />
 			  </div>
 			  <fieldset>
 				  <legend>خيارات العرض:</legend>

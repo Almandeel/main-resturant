@@ -155,7 +155,7 @@
                     </li>
                 @endpermission
 
-                @permission(['safes-read','cheques-read', 'expenses-read' ])
+                @permission(['safes-read','cheques-read', 'expenses-read','accounts-read'])
                     <li class="treeview {{ in_array(request()->segment(1) , ['safes','cheques', 'expenses' ]) ? 'active' : '' }}">
                         <a href="#">
                             <i class="fa fa-list"></i> <span>المحاسبة</span>
@@ -164,6 +164,10 @@
                             </span>
                         </a>
                         <ul class="treeview-menu" style="display: none;">
+                            @permission('accounts-read')
+                                <li class="{{ (request()->segment(1) == 'accounts') ? 'active' : '' }}"><a href="{{ route('accounts.index') }}"><i class="fa fa-file"></i><span>الحسابات</span></a></li>
+                            @endpermission
+
                             @permission('safes-read')
                                 <li class="{{ (request()->segment(1) == 'safes') ? 'active' : '' }}">
                                     <a href="{{ route('safes.index') }}">

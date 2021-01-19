@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\{Account, Entry, Transfer};
-use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
+use App\{Account, Entry, Transfer};
+
 class TransferController extends Controller
 {
     public function __construct() {
@@ -61,9 +62,15 @@ class TransferController extends Controller
         }
 
         $request->validate($rules);
-        $transfer = Transfer::create($request->except(['_token', '_method']));
+
+        if($request->amount <= Account::capital()->balance() ) {
+            $transfer = Transfer::create($request->except(['_token', '_method']));
+            session()->flash('success', 'تمت العملية بنجاح');
+        }else {
+            session()->flash('error', 'الرصيد لا يكفي');
+        }
+
         
-        session()->flash('success', 'تمت العملية بنجاح');
         return back();
     }
     

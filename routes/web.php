@@ -75,6 +75,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'management'], function() {
     Route::resource('payments', 'PaymentController');
     Route::resource('entries', 'EntryController');
     Route::resource('charges', 'ChargeController');
+    Route::resource('accounts', 'AccountController');
     Route::get('report/items', 'ItemController@reportItems')->name('items_report');
     Route::get('reports/invoice', 'ReportController@invoice')->name('reports.invoice');
     Route::get('reports/safes', 'ReportController@safes')->name('reports.safes');

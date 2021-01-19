@@ -23,7 +23,8 @@ class SafeController extends Controller
     public function index()
     {
         $safes = Safe::all();
-        return view('dashboard.safes.index', compact('safes'));
+        $capital = Account::capital()->balance();
+        return view('dashboard.safes.index', compact('safes', 'capital'));
     }
     
     /**
@@ -54,9 +55,13 @@ class SafeController extends Controller
         $data['show_expenses'] = isset($request->show_expenses);
         $data['show_cheques'] = isset($request->show_cheques);
         // dd($data);
-        $safe = Safe::create($data);
-        
-        session()->flash('success', 'تمت العملية بنجاح');
+
+        if($request->opening_balance <= Account::capital()->balance() ) {
+            $safe = Safe::create($data);
+            session()->flash('success', 'تمت العملية بنجاح');
+        }else {
+            session()->flash('error', 'الرصيد لا يكفي');
+        }
         
         return back();
     }
@@ -79,8 +84,10 @@ class SafeController extends Controller
         $from_date = $request->from_date ? $request->from_date : date('Y-m-d');
         $to_date = $request->to_date ? $request->to_date : date('Y-m-d');
         $safes = Safe::all();
+        $capital = Account::capital()->balance();
+
         // dd($transfers->first()->to);
-        return view('dashboard.safes.show', compact('safe', 'activeTab', 'safes', 'expenses', 'cheques', 'payments', 'transfers', 'from_date', 'to_date'));
+        return view('dashboard.safes.show', compact('capital', 'safe', 'activeTab', 'safes', 'expenses', 'cheques', 'payments', 'transfers', 'from_date', 'to_date'));
         
     }
     
