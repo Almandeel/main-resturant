@@ -23,7 +23,6 @@
                     </select>
                   </div>
                 </div>
-  
                 <div class="col-md-12">
                   <div class="form-group plans">
                     <label for="stores">الباقة</label>
@@ -39,18 +38,22 @@
               <div class="col-md-12">
                 <div class="form-group">
                   <label for="stores">طريقة الدفع</label>
-                  <select  required class="select2 form-control" name="payment_type">
-                    <option value="">اختار طريقة الدفع</option>
+                  <div class="row">
                     @foreach(Modules\Subscription\Models\Subscription::PAYMENTS as $key=>$value)
-                      <option value="{{ $key }}">{{ $value }}</option>
+                        <div class="col-md-6">
+                          <label>
+                            <input type="radio" name="payment_type" value="{{ $key }}"> {{ $value }}
+                          </label>
+                        </div>
                     @endforeach
-                  </select>
+                  </div>
                 </div>
               </div>
               <div class="col-md-12">
                 <div class="form-group " id="count">
                   <label for="stores">العدد</label>
-                  <input type="number" name="count" class="form-control" placeholder="العدد">
+                  <input class="virtual-keyboard-demo " onfocus="KioskBoard.Merge({theme:'light'});" data-kioskboard-type="numpad"
+                  data-kioskboard-specialcharacters="true" type="number" name="count" placeholder="العدد">
                 </div>
               </div>
             </div>
@@ -66,6 +69,15 @@
 
 
 
+
+@include('partials._keybord')
+
+<style>
+  #KioskBoard-VirtualKeyboard {
+    width: 27% !important;
+    right: 72%
+  }
+</style>
 
 <script>
 
