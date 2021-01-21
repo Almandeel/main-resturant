@@ -84,4 +84,6 @@
             {{ $subscriptions->links() }}
         </div>
     </div>
+
+    @include('partials._keybord')
 @endsection

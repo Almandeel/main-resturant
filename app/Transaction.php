@@ -41,7 +41,7 @@ class Transaction extends Model
                 'amount' => $attributes['amount'],
                 'details' => 'عبارة عن '. self::TYPES[$attributes['type']] .' للموظف رقم: ' . $attributes['employee_id'],
                 'to_id' => Account::revenues()->id,
-                'from_id' => $attributes['safe_id'],
+                'from_id' => $attributes['employee_account'],
                 'safe_id' => $attributes['safe_id'],
                 ]);
                 $entryId = $payment->entry_id;

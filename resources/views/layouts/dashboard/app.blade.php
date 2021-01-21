@@ -393,7 +393,7 @@
         <div class="pull-right hidden-xs">
             <b>Version</b> 1.1.0
         </div>
-        <strong>كل الحقوق محفوظة &copy; <script>document.write(data('Y'))</script>
+        <strong>كل الحقوق محفوظة &copy; 
             <a href="#"></a></strong> 
     </footer>
 

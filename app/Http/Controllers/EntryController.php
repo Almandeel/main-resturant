@@ -65,6 +65,7 @@ class EntryController extends Controller
                     'safe_id' => $request->safe_id,
                     'created_at' => $request->created_at,
                     'employee_id' => $accountable->id,
+                    'employee_account' => $accountable->account->id,
                     'details' => 'عبارة عن خصم من الموظف رقم: ' . $accountable->id,
                 ];
                 Transaction::create($data);
