@@ -130,11 +130,12 @@ class OrderController extends Controller
             
             session()->flash('success', 'restaurant::global.create_success');
             if ($request->has('next')) {
-                if ($request->next == 'back') {
-                    return back();
-                }else {
-                    return redirect()->to($request->next);
-                }
+                // if ($request->next == 'back') {
+                //     return back();
+                // }else {
+                //     return redirect()->to($request->next);
+                // }
+                return redirect()->to('/cashier/orders' . '/' . $order->id . '?view=print');
             }
             else {
                 return redirect()->route('cashier.orders.index');
