@@ -31,6 +31,23 @@
             @permission('subscriptions-print')
                 <a  style="display:inline-block; margin-left:1%" href="{{ route('subscriptions.barcodes', 'all') }}" class="btn btn-default pull-right  btn-sm print" > <i class="fa fa-print"> طباعة </i></a>
             @endpermission
+
+            <div class="row">
+                <div class="col-md-3">
+                    <form action="{{ route('subscriptions.index') }}" method="get">
+                        @csrf 
+                        <div class="input-group">
+                            <div class="input-group-btn">
+                                <button class="btn btn-default" type="submit">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                            <input type="text" name="barcode"  placeholder="بحث" class="form-control" @if(request('barcode')) value="{{ request('barcode') }}" @endif>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
         </div>
         <div class="box-body">
             <table id="subscriptions-table" class="table datatable table-bordered table-hover text-center">

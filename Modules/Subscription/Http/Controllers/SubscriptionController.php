@@ -23,12 +23,20 @@ class SubscriptionController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
         if(auth()->user()->id == 1) {
-            $subscriptions      = Subscription::with('plan')->orderBy('created_at', 'desc')->paginate();
+            $subscriptions      = Subscription::with('plan')
+            ->when($request->barcode, function ($query, $request) {
+                return $query->where('id', $request->barcode);
+            })
+            ->orderBy('created_at', 'desc')->paginate();
         }else {
-            $subscriptions      = Subscription::with('plan')->orderBy('created_at', 'desc')->where('user_id', auth()->user()->id)->whereDate('created_at', date("Y-m-d"))->paginate();
+            $subscriptions      = Subscription::with('plan')
+            ->when($request->barcode, function ($query) use($request) {
+                return $query->where('id', $request->barcode);
+            })
+            ->orderBy('created_at', 'desc')->where('user_id', auth()->user()->id)->whereDate('created_at', date("Y-m-d"))->paginate();
         }
         $plans              = Plan::all();
         $customers          = Customer::whereNotIn('id', $subscriptions->where('customer_id', '!=',14)->pluck('customer_id')->toArray())->get();

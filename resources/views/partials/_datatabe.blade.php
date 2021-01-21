@@ -97,7 +97,7 @@
             $.extend( true, $.fn.dataTable.defaults, {
                 'paging'      : true,
                 'lengthChange': true,
-                'searching'   : true,
+                'searching'   : false,
                 'ordering'    : true,
                 'info'        : false,
                 'autoWidth'   : true,
