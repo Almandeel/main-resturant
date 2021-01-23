@@ -108,21 +108,34 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($order->items as $item)
-                        <tr>
-                            <td>{{ $loop->index + 1}}</td>
-                            <td>{{ $item->name }}</td>
-                            <td>{{ $item->price }}</td>
-                            <td>{{ $item->quantity }}</td>
-                            <td>{{ $item->total }}</td>
-                        </tr>
-                    @endforeach
+                    @if(isset($items))
+                        @foreach ($items as $item)
+                            <tr>
+                                <td>{{ $loop->index + 1}}</td>
+                                <td>{{ $item->name }}</td>
+                                <td>{{ $item->price }}</td>
+                                <td>{{ $item->quantity }}</td>
+                                <td>{{ $item->total }}</td>
+                            </tr>
+                        @endforeach
+                    @else
+                        @foreach ($order->items as $item)
+                            <tr>
+                                <td>{{ $loop->index + 1}}</td>
+                                <td>{{ $item->name }}</td>
+                                <td>{{ $item->price }}</td>
+                                <td>{{ $item->quantity }}</td>
+                                <td>{{ $item->total }}</td>
+                            </tr>
+                        @endforeach
+                    @endif
                 </tbody>
             </table>
         </div>
         <div class="order-footer">
             <div class="line"></div>
             <div class="order-details">
+                @if(!isset($items))
                 <table class="table">
                     <tr>
                         <th><strong>الضريبة</strong></th>
@@ -141,6 +154,7 @@
                         <td><p>{{ $order->net }}</p></td>
                     </tr>
                 </table>
+                @endif
             </div>
             @if ($order->isDelivery())
                 <div class="line"></div>
@@ -187,7 +201,7 @@
     </div>
 @endpush
 @push('foot')
-    @if (request('view') == 'print')
+    @if (request('view') == 'print' || isset($items))
         <script>
             window.print()
         </script>

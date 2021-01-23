@@ -383,7 +383,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @if (!is_null($order))
+                                                {{-- @if (!is_null($order))
                                                     @foreach ($order->items as $item)
                                                         <tr>
                                                             <td>{{ $loop->index + 1 }}</td>
@@ -416,7 +416,7 @@
                                                             </td>
                                                         </tr>
                                                     @endforeach
-                                                @endif
+                                                @endif --}}
                                             </tbody>
                                         </table>
                                     </span>
@@ -504,11 +504,11 @@
                                                     <span>إلغاء</span>
                                                 </a>
                                                 @if(request()->order_id) 
-                                                <a href="{{ url()->previous() }}" class="btn btn-lg btn-success btn-block">
+                                                <button type="submit" class="btn btn-lg btn-success btn-block">
                                                     {{--  btn-default btn-error">  --}}
                                                     <i class="fa fa-check"></i>
                                                     <span>تم</span>
-                                                </a>
+                                                </button>
                                                 @endif
                                             </div>
                                         </div>

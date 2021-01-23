@@ -103,14 +103,14 @@
                                         </form>
                                     @endpermission
                                     @permission('orders-update')
-                                        <a href="{{ route('cashier.pos', ['order_id' => $order->id]) }}" class="btn btn-warning">
-                                            <i class="fa fa-edit"></i>
-                                            <span>تعديل</span>
+                                        <a href="{{ route('cashier.pos', ['order_id' => $order->id]) }}" class="btn btn-primary">
+                                            <i class="fa fa-plus"></i>
+                                            <span>اضافة</span>
                                         </a>
                                     @endpermission
                                 @endif
                                 @if ($order->isOpen() || $order->isCanceled())
-                                    @permission('orders-update')
+                                    @permission('orders-delete')
                                         <form action="{{ route('cashier.orders.update', $order) }}" method="post" style="display: inline-block;">
                                             @csrf
                                             @method('PUT')

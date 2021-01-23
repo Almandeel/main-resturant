@@ -4,6 +4,7 @@ namespace Modules\Cashier\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Restaurant\Models\OrderItems;
 use Modules\Restaurant\Models\{Order, ItemOrder, Delivery};
 
 class OrderController extends Controller
@@ -155,12 +156,13 @@ class OrderController extends Controller
     */
     public function update(Request $request, Order $order)
     {
+        // dd($request->all());
         request()->validate([
-        'table_id' => ['sometimes', 'numeric', 'nullable', 'exists:tables,id'],
+        'table_id'  => ['sometimes', 'numeric', 'nullable', 'exists:tables,id'],
         'waiter_id' => ['sometimes', 'numeric', 'nullable', 'exists:waiters,id'],
         'driver_id' => ['sometimes', 'numeric', 'nullable', 'exists:drivers,id'],
-        'units' => ['array'],
-        'prices' => ['array'],
+        'units'     => ['array'],
+        'prices'    => ['array'],
         'quantities' => ['array'],
         'tax' => ['numeric'],
         'discount' => ['numeric'],
@@ -168,7 +170,7 @@ class OrderController extends Controller
         $data = $request->except(['_token', '_method']);
         if ($request->has(['units', 'quantities', 'prices'])) {
             $data = $request->only(['discount', 'tax']);
-            $total = array_sum(array_map(function($x, $y) { return $x * $y; }, $request->prices, $request->quantities));
+            $total = array_sum(array_map(function($x, $y) use($order) { return ($x * $y) + $order->amount; }, $request->prices, $request->quantities));
             $status = Order::STATUS_OPEN;
             $items_status = ItemOrder::STATUS_DELIVERED;
             $net = $total;
@@ -179,22 +181,25 @@ class OrderController extends Controller
         $order->update($data);
         
         if ($request->has(['units', 'quantities', 'prices'])) {
-            $order->items()->delete();
+            // $order->items()->delete();
+            $new_items = [];
             for($i = 0; $i < count($request->units); $i++){
                 $unit = $request->units[$i];
                 $price = $request->prices[$i];
                 $quantity = $request->quantities[$i];
-                $order->items()->create([
-                'item_id' => $unit,
-                'quantity' => $quantity,
-                'price' => $price,
-                'status' => $items_status,
+                $item = $order->items()->create([
+                    'item_id' => $unit,
+                    'quantity' => $quantity,
+                    'price' => $price,
+                    'status' => $items_status,
                 ]);
+                array_push($new_items, $item->id);
             }
         }
         
         session()->flash('success', 'restaurant::global.update_success');
-        return back();
-        return redirect()->route('orders.index');
+        $items = ItemOrder::whereIn('id', $new_items)->get();
+        return view('cashier::orders.show', compact('order', 'items'));
+        // return redirect()->to('/cashier/orders' . '/' . $order->id . '?view=print');
     }
 }
