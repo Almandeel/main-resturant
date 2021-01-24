@@ -162,7 +162,7 @@ class ReportController extends Controller
         // $credits = Entry::whereBetween('created_at', [$fromDate, $toDate])->where('to_id', $safe_id)->orderBy('created_at', 'ASC')->get()->sortBy('created_at');
         $entries = Entry::where('from_id', $safe_id)->orwhere('to_id', $safe_id)->get()->sortBy('created_at')->whereBetween('created_at', [$fromDate, $toDate]);
         // dd($entries);
-        return view('reports.safe', compact('entries', 'opening_balance', 'safes', 'safe', 'safe_id', 'from_date', 'to_date'));
+        //return view('reports.safe', compact('entries', 'opening_balance', 'safes', 'safe', 'safe_id', 'from_date', 'to_date'));
         
         $debts = Entry::whereBetween('created_at', [$fromDate, $toDate])->where('from_id', $safe_id)->orderBy('created_at', 'DESC')->get();
         $credits = Entry::whereBetween('created_at', [$fromDate, $toDate])->where('to_id', $safe_id)->orderBy('created_at', 'DESC')->get();
