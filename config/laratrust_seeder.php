@@ -40,6 +40,7 @@ return [
             'menus' => 'c,r,u,d',
             'orders' => 'c,r,u,d',
             'categories' => 'c,r,u,d',
+            'settings' => 'c,r,u,d',
         ],
 
         'cashier' => [
@@ -94,7 +95,8 @@ return [
             'cheques' => 'c,r,u,d,p',
             'expenses' => 'c,r,u,d,p',
             'categories' => 'c,r,u,d',
-            'sms' => 'rec'
+            'settings' => 'c,r,u,d',
+            'sms' => 'rec',
         ],
     ],
 

@@ -236,7 +236,11 @@
                 @endpermission
 
                 @permission('customers-read')
-                    <li class="{{ (request()->segment(2) == 'subcustomers') ? 'active' : '' }}"><a href="{{ route('subcustomers.index') }}"><i class="fa fa-users"></i><span>  العملاء </span></a></li>
+                    <li class="{{ (request()->segment(2) == 'subcustomers') ? 'active' : '' }}"><a href="{{ route('subcustomers.index') }}"><i class="fa fa-users"></i><span> العملاء </span></a></li>
+                @endpermission
+
+                @permission('settings-read')
+                    <li class="{{ (request()->segment(2) == 'settings') ? 'active' : '' }}"><a href="{{ route('settings.index') }}"><i class="fa fa-edit"></i><span>  الاعدادات </span></a></li>
                 @endpermission
 
             @endif

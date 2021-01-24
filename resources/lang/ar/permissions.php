@@ -260,6 +260,11 @@ return [
     'attachments-delete' => 'حذف المرفقات',
     'attachments-print' => 'طباعة المرفقات',
 
+    'settings-read'   => 'عرض الاعدادات',
+    'settings-create' => 'انشاء الاعدادات',
+    'settings-update' => 'تعديل الاعدادات',
+    'settings-delete' => 'حذف الاعدادات',
+
 
     'sms-receive' => 'استلام الرسائل النصية',
 

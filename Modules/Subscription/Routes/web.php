@@ -18,6 +18,7 @@ Route::prefix('subscription')->group(function() {
         'subscriptions' => 'SubscriptionController',
         'plans' => 'PlanController',
         'subcustomers' => 'CustomerController',
+        'settings' => 'SettingController',
         ]
     );
 });

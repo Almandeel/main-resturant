@@ -3,6 +3,7 @@
 namespace Modules\Subscription\Database\Seeders;
 
 use App\Account;
+use App\Setting;
 use App\Customer;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
@@ -24,6 +25,12 @@ class SubscriptionDatabaseSeeder extends Seeder
             'name' => 'عميل خاص',
             'phone' => '0900000000',
             'account_id' =>  $account->id,
+        ]);
+
+        $settings = Setting::create([
+            'module' => 'subscriptions',
+            'name' => 'background',
+            'value' => 'subscriptions.jpg',
         ]);
 
         // $this->call("OthersTableSeeder");
