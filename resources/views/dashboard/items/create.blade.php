@@ -30,7 +30,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>الكود</label>
-                            <input class="form-control" type="text" name="barcode" placeholder="الكود" >
+                            <input class="form-control" type="number" name="barcode" placeholder="الكود" >
                         </div>
                     </div>
                 </div>
@@ -205,6 +205,7 @@
                             <td>`+ unit_name.val() +`</td>
                             
                             <td>
+                                <input type="hidden" name="units_names[]" value="` + unit_name.val() + `">
                                 <button type="button" class="btn btn-danger btn-remove-unit">
                                     <i class="fa fa-times"></i>
                                 </button>

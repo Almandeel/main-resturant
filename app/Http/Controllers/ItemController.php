@@ -95,7 +95,8 @@ class ItemController extends Controller
                 // $unit_price = $request->units_prices[$i] ?? 0;
 
                 $unit = Unit::firstOrCreate(['name' => $unit_name]);
-                $item->units()->attach($unit->id, ['price' => $unit->itemUnit ? $unit->itemUnit->price : 0]);
+                // ['price' => $unit->itemUnit ? $unit->itemUnit->price : 0]
+                $item->units()->attach($unit->id);
             }
         }
         
