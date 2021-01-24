@@ -64,7 +64,11 @@ class ItemController extends Controller
             $data['barcode'] = $request->barcode;
         }else {
             $last_barcode = Item::latest()->first()->barcode;
-            $data['barcode'] = $last_barcode + 1;
+            if($last_barcode && is_int($last_barcode)) {
+                $data['barcode'] = $last_barcode + 1;
+            }else {
+                $data['barcode'] = 100;
+            }
         }
 
         if($request->sub_category) {
