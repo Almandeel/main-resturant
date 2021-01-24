@@ -35,7 +35,10 @@ class CreateCustomersTable extends Migration
             ->references('id')->on('accounts')
             ->onDelete('cascade')
             ->onUpdate('cascade');
+
         });
+        Schema::enableForeignKeyConstraints();
+        \DB::statement('ALTER TABLE customers AUTO_INCREMENT = 100;');
     }
     
     /**

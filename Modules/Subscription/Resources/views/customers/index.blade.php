@@ -62,10 +62,23 @@
                                         <a class="btn btn-info btn-xs" href="{{ route('subcustomers.show', $customer->id) }}"><i class="fa fa-eye"></i> عرض </a>
                                     @endpermission
 
-                                    <a class="btn btn-default btn-xs showCustomerModal preview" data-balance="{{ $customer->balance() }}" data-id="{{ $customer->id }}" data-name="{{ $customer->name }}" data-phone="{{ $customer->phone }}">
-                                        <i class="fa fa-list"></i>
-                                        <span>تفاصيل</span>
-                                    </a>
+                                    @permission('customers-read')
+                                        <a class="btn btn-default btn-xs showCustomerModal preview" data-balance="{{ $customer->balance() }}" data-id="{{ $customer->id }}" data-name="{{ $customer->name }}" data-phone="{{ $customer->phone }}">
+                                            <i class="fa fa-list"></i>
+                                            <span>تفاصيل</span>
+                                        </a>
+                                    @endpermission
+
+                                    @if($customer->id != 100)
+                                        @permission('customers-print')
+                                            <a class="btn btn-info btn-xs" href="{{ route('subcustomers.card', $customer->id) }}">
+                                                <i class="fa fa-list"></i>
+                                                <span>البطاقة</span>
+                                            </a>
+                                        @endpermission
+                                    @endif
+
+
                                     @permission('customers-update')
                                         <a class="btn btn-warning btn-xs showCustomerModal update" data-action="{{ route('subcustomers.update', $customer->id) }}" data-id="{{ $customer->id }}" data-name="{{ $customer->name }}" data-phone="{{ $customer->phone }}" data-address="{{ $customer->address }}"><i class="fa fa-edit"></i> تعديل </a>
                                     @endpermission

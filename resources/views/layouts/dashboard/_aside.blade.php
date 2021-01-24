@@ -23,13 +23,13 @@
                                 </span>
                         </a>
                         <ul class="treeview-menu" style="display: none;">
-
+{{-- 
                             @permission('stores-create')
                             <li><a href="{{ route('stores.create') }}">
                                     <i class="fa fa-angle-double-left"></i>
                                     <span>إضافة مخزن</span>
                                 </a></li>
-                            @endpermission
+                            @endpermission --}}
 
                             @permission('stores-read')
                             <li><a href="{{ route('stores.index') }}">

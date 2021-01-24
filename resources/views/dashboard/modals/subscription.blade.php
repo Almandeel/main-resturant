@@ -82,7 +82,7 @@
 <script>
 
   function counter() {
-    if($('#customer_id').val() == 18) {
+    if($('#customer_id').val() == 100) {
       $('#subscription #count').css('display', 'block')
     }else {
       $('#subscription #count').css('display', 'none')

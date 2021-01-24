@@ -73,7 +73,7 @@ class Customer extends Model
         $groupId = Group::customers()->id;
         $account = Account::create(['name' => $attributes['name'], 'group_id' => $groupId]);
         $attributes['account_id'] = $account->id;
-        $attributes['id'] = $account->id;
+        // $attributes['id'] = $account->id;
         $model = static::query()->create($attributes);
         return $model;
     }

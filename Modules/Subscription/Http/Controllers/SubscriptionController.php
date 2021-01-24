@@ -2,6 +2,7 @@
 
 namespace Modules\Subscription\Http\Controllers;
 
+use App\Setting;
 use App\Customer;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -169,5 +170,11 @@ class SubscriptionController extends Controller
             $subscriptions = Subscription::where('id', $id)->get();
         }
         return view('subscription::subscriptions.barcode', compact('subscriptions'));
+    }
+
+    public function card($id) {
+        $customer = Customer::find($id);
+        $setting = Setting::first();
+        return view('subscription::customers.card', compact('customer', 'setting'));
     }
 }
