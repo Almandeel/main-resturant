@@ -20,7 +20,7 @@
             <div class="col-md-6">
               <div class="form-group">
                 <label for="cheque_type">النوع</label>
-                <select id="cheque_type" name="type" class="form-control input-transparent">
+                <select id="cheque_type" name="type" class="form-control ">
                   @foreach (\App\Cheque::TYPES as $key => $value)
                     <option value="{{ $key }}">{{ $value }}</option>
                   @endforeach
@@ -139,6 +139,20 @@
       $('#form_cheques').attr('action', $(this).data('action'))
       $('#form_cheques').append('<input type="hidden" name="_method" value="PUT">')
 
+      let selectedChequeIds = $(this).data('type')
+        
+      let chequeList = $('#form_cheques select[id="cheque_type"] option');
+
+      // console.log(selectedChequeIds, chequeList)
+
+      chequeList.each(function() {
+        
+          if ($(this).val() == selectedChequeIds) {
+            $(this).attr('selected', true)
+          }
+        
+      })
+
       //set fields data
       $('#chequeModal input[name="number"]').val($(this).data('number'))
       $('#chequeModal input[name="type"]').val($(this).data('type'))
@@ -197,6 +211,7 @@
 				$('#chequeModal input#amount').attr('max', $('#chequeModal #account_id option:selected').data('balance'))
 			}
 		})
+
 		if($('#chequeModal #cheque_type option:selected').val() == {{ App\Cheque::TYPE_COLLECT }}){
 			$('#chequeModal .form-group-bank input').val('')
 			$('#chequeModal .form-group-bank').fadeOut()
@@ -208,6 +223,7 @@
 		}
 
 		var account_select = $('#chequeModal select#account_id');
+    
 		account_select.change(function(){
 			var selected = account_select.children('option:selected');
 			if($('#chequeModal #cheque_type option:selected').val() == {{ App\Cheque::TYPE_COLLECT }}){
@@ -217,6 +233,7 @@
 			}
 		})
 	})
+
 	function checkBank(){
 		if($('#chequeModal #cheque_type option:selected').val() == {{ App\Cheque::TYPE_PAY }}){
 			$('#chequeModal .form-group-bank input').val('')

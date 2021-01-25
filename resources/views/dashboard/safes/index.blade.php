@@ -46,6 +46,9 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @php 
+                        $total = 0;
+                    @endphp
                     @foreach ($safes as $safe)
                         <tr>
                             <td>{{ $safe->id }}</td>
@@ -127,8 +130,19 @@
                                 @endpermission
                             </td>
                         </tr>
+
+                        @php 
+                            $total += $safe->balance();
+                        @endphp
                     @endforeach
                 </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="3">الاجمالي</th>
+                        <th>{{ number_format($total, 2) }}</th>
+                        <th colspan="5"></th>
+                    </tr>
+                </tfoot>
             </table>
 
             <input type="hidden" data-action="{{ route('safes.store') }}" id="create" />

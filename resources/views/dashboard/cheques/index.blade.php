@@ -102,12 +102,17 @@
                                     @endpermission
                                 @permission('cheques-update')
                                 <a class="btn btn-warning btn-xs showChequeModal update"
-                                    data-action="{{ route('cheques.update', $cheque->id) }}" data-id="{{ $cheque->id }}"
-                                    data-bank="{{ $cheque->bank_name }}" data-number="{{ $cheque->number }}"
-                                    data-type="{{ $cheque->type }}" data-benefit="{{ str_replace('App\\', '', $cheque->benefit) }}"
-                                    data-benefit_id="{{ $cheque->benefit_id }}" data-amount="{{ $cheque->amount }}"
-                                    data-due_date="{{ $cheque->due_date }}" data-details="{{ $cheque->details }}"><i
-                                        class="fa fa-edit"></i> تعديل </a>
+                                    data-action="{{ route('cheques.update', $cheque->id) }}"
+                                    data-id="{{ $cheque->id }}"
+                                    data-bank="{{ $cheque->bank_name }}" 
+                                    data-number="{{ $cheque->number }}"
+                                    data-type="{{ $cheque->type }}" 
+                                    data-benefit="{{ str_replace('App\\', '', $cheque->benefit) }}"
+                                    data-benefit_id="{{ $cheque->benefit_id }}" 
+                                    data-amount="{{ $cheque->amount }}"
+                                    data-due_date="{{ $cheque->due_date }}" 
+                                    data-details="{{ $cheque->details }}"><i
+                                    class="fa fa-edit"></i> تعديل </a>
                                 @endpermission
                 
                                 @permission('cheques-update')

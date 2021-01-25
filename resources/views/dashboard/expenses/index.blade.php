@@ -32,6 +32,9 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @php 
+                        $total = 0;
+                    @endphp
                     @foreach ($expenses as $index=>$expense)
                         <tr>
                             <td>{{ $index + 1 }}</td>
@@ -62,8 +65,18 @@
                                 @endpermission
                             </td>
                         </tr>
+                        @php 
+                            $total += $expense->amount;
+                        @endphp
                     @endforeach
                 </tbody>
+                <tfoot>
+                    <tr>
+                        <th>الاجمالى</th>
+                        <th>{{ number_format($total, 2) }}</th>
+                        <th colspan="6"></th>
+                    </tr>
+                </tfoot>
             </table>
 
             <input type="hidden" data-action="{{ route('expenses.store') }}" id="create">

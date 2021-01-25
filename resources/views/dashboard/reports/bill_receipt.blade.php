@@ -8,7 +8,7 @@
 @section('content')
 <div class="reportr-header">
     <div>
-       <h3> فاتورة رقم : {{ $bill->id }}</h3>
+        <h3> فاتورة رقم : {{ $bill->id }}</h3>
     </div>
 </div>
 

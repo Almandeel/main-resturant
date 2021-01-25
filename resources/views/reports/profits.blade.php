@@ -15,7 +15,6 @@
         </div>
         <div class="box-body">
             <form action="" method="GET" class="form-inline d-inline-block">
-                @csrf
                 <label for="store_id">المخزن</label>
                 <select name="store_id" id="store_id" class="form-control select2">
                     <option value="all" {{ ($store_id == 'all') ? 'selected' : '' }}>الكل</option>
@@ -103,7 +102,7 @@
                 <tfoot>
                     <tr>
                         {{--  <th>#</th>  --}}
-                        <th colspan="{{ !$store || $store_id !== 'out' ? 2 : 3 }}">الاجمالي</th>
+                        <th colspan="{{ !$store || $store_id !== 'out' ? 3 : 3 }}">الاجمالي</th>
                         <th>{{ number_format($purchases, 2) }}</th>
                         <th>{{ number_format($sells, 2) }}</th>
                         <th>{{ number_format($nets, 2) }}</th>
@@ -121,6 +120,7 @@
                     </tr>
                 </tfoot>
             </table>
+            {{ $invoices_items->appends(request()->all())->links() }}
         </div>
     </div>
 @endsection

@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Customer;
-use App\{Invoice, Bill, BillItem};
-use App\Store;
-use App\Account;
-use App\ItemStoreUnit;
-use App\InvoiceItem;
 use App\Entry;
-use App\{Cheque, Safe, Payment, Expense};
+use App\Store;
 use App\Charge;
-use Illuminate\Support\Carbon;
+use App\Account;
+use App\Customer;
+use Carbon\Carbon;
+use App\InvoiceItem;
+use App\ItemStoreUnit;
+use Illuminate\Http\Request;
+use App\{Invoice, Bill, BillItem};
 use Illuminate\Support\Collection;
+use App\{Cheque, Safe, Payment, Expense};
 // use JasperPHP\JasperPHP as JasperPHP;
 class InvoiceController extends Controller
 {
@@ -32,61 +32,77 @@ class InvoiceController extends Controller
     */
     public function index(Request $request)
     {
-        $limit = $request->limit ? $request->limit : 50;
-        $stores = auth()->user()->getStores();
-        $customers = auth()->user()->customers();
-        $stores_ids = $stores->pluck('id')->toArray();
-        $customers_ids = $customers->pluck('id')->toArray();
+        /*
         $from_date = $request->from_date ? $request->from_date : date('Y-m-d');
         $to_date = $request->to_date ? $request->to_date : date('Y-m-d');
-        $store_id = $request->store_id ? $request->store_id : 'all';
-        $customer_id = $request->customer_id ? $request->customer_id : 'all';
-        $invoices = Invoice::with('user')->with('customer')->with('store')->whereNull('invoice_id')->limit($limit);
+
+        
         // $from_date = !isset($request->from_date) && $invoices->get()->count() ? $invoices->get()->first()->created_at->format('Y-m-d') : $from_date;
         // $to_date = !isset($request->from_date) && $invoices->get()->count() ? $invoices->get()->last()->created_at->format('Y-m-d') : $from_date;
         
         $fromDate = $from_date . ' 00:00:00';
         $toDate = $to_date . ' 23:59:59';
         $invoices = $invoices->whereBetween('created_at', [$fromDate, $toDate])->orderBy('created_at', 'DESC');
-        if(!isset($request->store_id) || $request->store_id == 'all'){
-            $stores_invoices = Invoice::with('user')->with('customer')->with('store')->whereBetween('created_at', [$fromDate, $toDate])->whereNull('invoice_id')->whereIn('store_id', $stores_ids)->limit($limit)->get();
-            $bills = Bill::whereBetween('created_at', [$fromDate, $toDate])->whereNull('bill_id')->whereIn('store_id', $stores->pluck('id')->toArray())->get();
-            $out_invoices = Invoice::with('user')->with('customer')->with('store')->whereBetween('created_at', [$fromDate, $toDate])->whereNull('invoice_id')->whereIn('bill_id', $bills->pluck('id')->toArray())->limit($limit)->get();
-            $invoices = $stores_invoices->merge($out_invoices);
-        }
-        else if($request->store_id == 'out'){
-            $bills = Bill::whereBetween('created_at', [$fromDate, $toDate])->whereNull('bill_id')->whereIn('store_id', $stores->pluck('id')->toArray())->get();
-            $invoices = $invoices->whereIn('bill_id', $bills->pluck('id')->toArray())->get();
-        }
-        else{
-            $invoices = $invoices->where('store_id', $store_id)->orderBy('created_at', 'DESC')->get();
-        }
+        */
+        $limit = $request->limit ? $request->limit : 50;
+        $stores = auth()->user()->getStores();
+        $customers = auth()->user()->customers();
+        $stores_ids = $stores->pluck('id')->toArray();
+        $customers_ids = $customers->pluck('id')->toArray();
+        $store_id = $request->store_id ? $request->store_id : 'all';
+        $customer_id = $request->customer_id ? $request->customer_id : 'all';
+
+        $from_date = Carbon::parse($request->from_date ?? now()->startOfDay());
+        $to_date = Carbon::parse($request->to_date ?? now())->endOfDay();
+
+        $invoices = Invoice::with('user')->with('customer')->with('store')
+            ->whereNull('invoice_id')
+            ->whereBetween('created_at', [$from_date, $to_date])
+            ->when($store_id != 'all', function ($q) use($request) {return $q->where('store_id', $request->store_id);})
+            ->when($customer_id != 'all', function ($q) use($request) {return $q->where('customer_id', $request->customer_id);})
+            ->orderBy('created_at', 'DESC')
+            ->paginate();
+            
         
-        if(!isset($request->customer_id) || $request->customer_id == 'all'){
-            $invoices = $invoices->whereIn('customer_id', $customers_ids);
-        }
-        else{
-            $invoices = $invoices->where('customer_id', $customer_id);
-        }
+        // if(!isset($request->store_id) || $request->store_id == 'all'){
+        //     $stores_invoices = Invoice::with('user')->with('customer')->with('store')->whereBetween('created_at', [$fromDate, $toDate])->whereNull('invoice_id')->whereIn('store_id', $stores_ids)->limit($limit)->get();
+        //     $bills = Bill::whereBetween('created_at', [$fromDate, $toDate])->whereNull('bill_id')->whereIn('store_id', $stores->pluck('id')->toArray())->get();
+        //     $out_invoices = Invoice::with('user')->with('customer')->with('store')->whereBetween('created_at', [$fromDate, $toDate])->whereNull('invoice_id')->whereIn('bill_id', $bills->pluck('id')->toArray())->limit($limit)->get();
+        //     $invoices = $stores_invoices->merge($out_invoices);
+        // }
+        // else if($request->store_id == 'out'){
+        //     $bills = Bill::whereBetween('created_at', [$fromDate, $toDate])->whereNull('bill_id')->whereIn('store_id', $stores->pluck('id')->toArray())->get();
+        //     $invoices = $invoices->whereIn('bill_id', $bills->pluck('id')->toArray())->get();
+        // }
+        // else{
+        //     $invoices = $invoices->where('store_id', $store_id)->orderBy('created_at', 'DESC')->get();
+        // }
         
-        $is_payed = isset($request->is_payed) ? $request->is_payed : 'both';
-        if(isset($request->is_payed) && $request->is_payed != 'both'){
-            $invoices = $invoices->filter(function($invoice) use ($is_payed){
-                return (bool) $is_payed ? $invoice->isPayed() : !$invoice->isPayed();
-            });
-        }
+        // if(!isset($request->customer_id) || $request->customer_id == 'all'){
+        //     $invoices = $invoices->whereIn('customer_id', $customers_ids);
+        // }
+        // else{
+        //     $invoices = $invoices->where('customer_id', $customer_id);
+        // }
         
-        $is_delivered = isset($request->is_delivered) ? $request->is_delivered : 'both';
-        if(isset($request->is_delivered) && $request->is_delivered != 'both'){
-            $invoices = $invoices->filter(function($invoice) use ($is_delivered){
-                return (bool) $is_delivered ? $invoice->isDelivered() : !$invoice->isDelivered();
-            });
-        }
+        // $is_payed = isset($request->is_payed) ? $request->is_payed : 'both';
+        // if(isset($request->is_payed) && $request->is_payed != 'both'){
+        //     $invoices = $invoices->filter(function($invoice) use ($is_payed){
+        //         return (bool) $is_payed ? $invoice->isPayed() : !$invoice->isPayed();
+        //     });
+        // }
         
-        $invoices = $invoices->sortByDesc('created_at');
+        // $is_delivered = isset($request->is_delivered) ? $request->is_delivered : 'both';
+        // if(isset($request->is_delivered) && $request->is_delivered != 'both'){
+        //     $invoices = $invoices->filter(function($invoice) use ($is_delivered){
+        //         return (bool) $is_delivered ? $invoice->isDelivered() : !$invoice->isDelivered();
+        //     });
+        // }
+        
+        // $invoices = $invoices->sortByDesc('created_at');
         // $advanced_search = isset($request->from_date) || isset($request->store_id) || isset($request->customer_id) || isset($request->is_delivered) || isset($request->is_payed);
         $advanced_search = true;
-        return view('dashboard.invoices.index', compact('advanced_search', 'limit', 'stores', 'store_id', 'is_delivered', 'is_payed', 'customers', 'customer_id', 'invoices', 'from_date', 'to_date'));
+        return view('dashboard.invoices.index', compact('advanced_search', 'limit', 'stores', 'store_id', 'customers', 'customer_id', 'invoices', 'from_date', 'to_date'));
         
     }
     

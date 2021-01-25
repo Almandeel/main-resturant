@@ -43,7 +43,6 @@
 				</div>
 				<div id="search" class="collapse well {{ $advanced_search ? 'in' : '' }}">
 					<form action="" method="GET" class="form-inline d-inline-block">
-						@csrf
 						<label for="store_id">المخازن</label>
 						<select name="store_id" id="store_id" class="form-control select2">
 							<option value="all" {{ ($store_id === 'all') ? 'selected' : '' }}>الكل</option>
@@ -61,7 +60,7 @@
 							</option>
 							@endforeach
 						</select>
-						<label for="is_delivered">الاستلام</label>
+						{{-- <label for="is_delivered">الاستلام</label>
 						<select name="is_delivered" id="is_delivered" class="form-control select2">
 							<option value="both" {{ ($is_delivered === 'both') ? 'selected' : '' }}>الكل</option>
 							<option value="1" {{ ($is_delivered === '1') ? 'selected' : '' }}>تم</option>
@@ -72,7 +71,7 @@
 							<option value="both" {{ ($is_payed === 'both') ? 'selected' : '' }}>الكل</option>
 							<option value="1" {{ ($is_payed === '1') ? 'selected' : '' }}>تم</option>
 							<option value="0" {{ ($is_payed === '0') ? 'selected' : '' }}>ليس بعد</option>
-						</select>
+						</select> --}}
 						<label for="from-date">من</label>
 						<input type="date" name="from_date" id="from-date" value="{{ $from_date }}" class="form-control">
 						<label for="to-date">الى</label>
@@ -190,6 +189,7 @@
 						</tr>
 					</tfoot>
 				</table>
+				{{ $bills->appends(request()->all())->links() }}
 			</div>
 		</div>
 @endsection

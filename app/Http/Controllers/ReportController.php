@@ -379,9 +379,9 @@ class ReportController extends Controller
         $invoices_items = InvoiceItem::whereNull('invoice_item_id')->whereIn('invoice_id', $invoices_ids);
         
         if(!isset($request->item_id) || $request->item_id == 'all'){
-            $invoices_items = $invoices_items->whereIn('item_id', $items_ids)->orderBy('created_at', 'DESC')->get();
+            $invoices_items = $invoices_items->whereIn('item_id', $items_ids)->orderBy('created_at', 'DESC')->paginate();
         }else{
-            $invoices_items = $invoices_items->where('item_id', $request->item_id)->orderBy('created_at', 'DESC')->get();
+            $invoices_items = $invoices_items->where('item_id', $request->item_id)->orderBy('created_at', 'DESC')->paginate();
         }
         
         $itemz = $invoices_items->groupBy('item_id');

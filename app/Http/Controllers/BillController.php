@@ -32,6 +32,45 @@ class BillController extends Controller
     */
     public function index(Request $request)
     {
+        /*
+
+        $first_bill = $allBills->first();
+        $last_bill = $allBills->last();
+        
+        $from_date = $request->from_date ? $request->from_date : date('Y-m-d');
+        $to_date = $request->to_date ? $request->to_date : date('Y-m-d');
+
+        $from_date = !isset($request->from_date) && $first_bill ? $first_bill->created_at->format('Y-m-d') : $from_date;
+        $to_date = !isset($request->from_date) && $last_bill ? $last_bill->created_at->format('Y-m-d') : $from_date;
+            
+        $fromDate = $from_date . ' 00:00:00';
+        $toDate = $to_date . ' 23:59:59';
+        $bills = $allBills->whereBetween('created_at', [$fromDate, $toDate]);
+
+        // if(!isset($request->store_id) || $request->store_id == 'all'){
+        //     $stores_bills = $bills->whereIn('store_id', $stores_ids);
+        //     // $stores_bills = $bills->filter(function($bill) use ($stores_ids){ return in_array($bill->store_id, $stores_ids); });
+        //     // $out_bills = Bill::whereBetween('created_at', [$fromDate, $toDate])->whereNull('bill_id')->whereNotNull('bill_id')->get();
+        //     $user_id = auth()->user()->id;
+        //     $out_bills = $bills->filter(function($bill) use($user_id){ return $bill->bill !== null && $bill->user_id == $user_id; });
+            
+        //     $bills = $stores_bills->merge($out_bills);
+        // }
+        // else{
+        //     $bills = $bills->filter(function($bill) use ($store_id){ return $bill->store_id == $store_id; });
+        // }
+
+        // if(!isset($request->supplier_id) || $request->supplier_id == 'all'){
+        //     $bills = $bills->whereIn('supplier_id', $suppliers_ids);
+        //     // $bills = $bills->filter(function($bill) use ($suppliers_ids){ return in_array($bill->supplier_id, $suppliers_ids); });
+            
+        // }
+        // else{
+        //     $bills = $bills->where('supplier_id', $supplier_id);
+        // }
+        // dd($suppliers_ids, $first_bill);
+
+        */
         $stores = auth()->user()->getStores();
         $suppliers = auth()->user()->suppliers();
         $stores_ids = $stores->pluck('id')->toArray();
@@ -39,60 +78,36 @@ class BillController extends Controller
         $store_id = $request->store_id ? $request->store_id : 'all';
         $supplier_id = $request->supplier_id ? $request->supplier_id : 'all';
         
-        $allBills = Bill::whereNull('bill_id')->get();
-        $first_bill = $allBills->first();
-        $last_bill = $allBills->last();
+        //);
+        $from_date = Carbon::parse($request->from_date ?? now()->startOfDay());
+        $to_date = Carbon::parse($request->to_date ?? now())->endOfDay();
+
+        $bills = Bill::whereNull('bill_id')
+            ->whereBetween('created_at', [$from_date, $to_date])
+            ->when($store_id != 'all', function ($q) use($request) {return $q->where('store_id', $request->store_id);})
+            ->when($supplier_id != 'all', function ($q) use($request) {return $q->where('supplier_id', $request->supplier_id);})
+            ->orderBy('created_at', 'DESC')
+            ->paginate();
+
         
-        $from_date = $request->from_date ? $request->from_date : date('Y-m-d');
-        $to_date = $request->to_date ? $request->to_date : date('Y-m-d');
-        $from_date = !isset($request->from_date) && $first_bill ? $first_bill->created_at->format('Y-m-d') : $from_date;
-        $to_date = !isset($request->from_date) && $last_bill ? $last_bill->created_at->format('Y-m-d') : $from_date;
-        // dd($from_date, $to_date);
-        $fromDate = $from_date . ' 00:00:00';
-        $toDate = $to_date . ' 23:59:59';
-        $bills = $allBills->whereBetween('created_at', [$fromDate, $toDate]);
-        if(!isset($request->store_id) || $request->store_id == 'all'){
-            $stores_bills = $bills->whereIn('store_id', $stores_ids);
-            // $stores_bills = $bills->filter(function($bill) use ($stores_ids){ return in_array($bill->store_id, $stores_ids); });
-            // $out_bills = Bill::whereBetween('created_at', [$fromDate, $toDate])->whereNull('bill_id')->whereNotNull('bill_id')->get();
-            $user_id = auth()->user()->id;
-            $out_bills = $bills->filter(function($bill) use($user_id){ return $bill->bill !== null && $bill->user_id == $user_id; });
-            
-            $bills = $stores_bills->merge($out_bills);
-        }
-        else{
-            $bills = $bills->filter(function($bill) use ($store_id){ return $bill->store_id == $store_id; });
-        }
+        // if(isset($request->is_payed) && $request->is_payed != 'both'){
+        //     $bills = $bills->filter(function($bill) use ($is_payed){
+        //         return (bool) $is_payed ? $bill->isPayed() : !$bill->isPayed();
+        //     });
+        // }
         
-        if(!isset($request->supplier_id) || $request->supplier_id == 'all'){
-            $bills = $bills->whereIn('supplier_id', $suppliers_ids);
-            // $bills = $bills->filter(function($bill) use ($suppliers_ids){ return in_array($bill->supplier_id, $suppliers_ids); });
-            
-        }
-        else{
-            $bills = $bills->where('supplier_id', $supplier_id);
-        }
-        // dd($suppliers_ids, $first_bill);
+        // $is_delivered = isset($request->is_delivered) ? $request->is_delivered : 'both';
+        // if(isset($request->is_delivered) && $request->is_delivered != 'both'){
+        //     $bills = $bills->filter(function($bill) use ($is_delivered){
+        //         return (bool) $is_delivered ? $bill->isDelivered() : !$bill->isDelivered();
+        //     });
+        // }
         
-        $is_payed = isset($request->is_payed) ? $request->is_payed : 'both';
-        if(isset($request->is_payed) && $request->is_payed != 'both'){
-            $bills = $bills->filter(function($bill) use ($is_payed){
-                return (bool) $is_payed ? $bill->isPayed() : !$bill->isPayed();
-            });
-        }
-        
-        $is_delivered = isset($request->is_delivered) ? $request->is_delivered : 'both';
-        if(isset($request->is_delivered) && $request->is_delivered != 'both'){
-            $bills = $bills->filter(function($bill) use ($is_delivered){
-                return (bool) $is_delivered ? $bill->isDelivered() : !$bill->isDelivered();
-            });
-        }
-        
-        $bills = $bills->sortByDesc('created_at');
+        // $bills = $bills->sortByDesc('created_at');
         
         // dd($bills->first());
         $advanced_search = isset($request->from_date) || isset($request->store_id) || isset($request->supplier_id) || isset($request->is_delivered) || isset($request->is_payed);
-        return view('dashboard.bills.index', compact('advanced_search', 'stores', 'store_id', 'is_delivered', 'is_payed', 'suppliers', 'supplier_id', 'bills', 'from_date', 'to_date'));
+        return view('dashboard.bills.index', compact('advanced_search', 'stores', 'store_id', 'suppliers', 'supplier_id', 'bills', 'from_date', 'to_date'));
         
     }
     
