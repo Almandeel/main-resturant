@@ -13,7 +13,6 @@
         }
         .barcode {
             text-align: center;
-            border: 1px solid #ddd;
             padding: 10px;
         }
         .barcode-b > div{
@@ -21,21 +20,31 @@
         }
     </style>
     <style>
-                @media print {
+        @media print {
+            body {
+                background-size: cover
+            }
+            .barcode h4 {
+                font-size: 40px;
+            }
             button , a {
                 display: none !important;
+            }
+            .barcode  {
+                margin-top: 60%;
+                font-size: 40px !important;
             }
         }
     </style>
 </head>
-<body>
+<body style="background-image: url({{ asset('dashboard/img' . '/' . $setting->value) }}); background-size:cover">
     <div class="container">
         <div class="row">
             <div style="margin:auto" class="col-md-6">
-                <div class="barcode" style="background-image: url({{ asset('dashboard/img' . '/' . $setting->value) }})">
+                <div class="barcode" >
                     <h4>{{ $customer->name }}</h4>
                     <div class="barcode-b">
-                        <p>{!! DNS1D::getBarcodeHTML(number_format($customer->id), "C128",1.4,44, "black") !!}</p>
+                        <p>{!! DNS1D::getBarcodeHTML(number_format($customer->id), "C128",3,100, "black") !!}</p>
                     </div>
                 </div>
             </div>    
