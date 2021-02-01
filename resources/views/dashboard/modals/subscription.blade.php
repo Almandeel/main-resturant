@@ -163,9 +163,9 @@ $('.subscription').click(function() {
 
           $('#content-subscription').css('display', 'block')
 
-          $('#form_subscription select[name="customer_id"]').val('')
-          $('#form_subscription select[name="plan_id"]').val('')
-          $('#form_subscription select[name="payment_type"]').val('')
+          // $('#form_subscription select[name="customer_id"]').val('')
+          // $('#form_subscription select[name="plan_id"]').val('')
+          // $('#form_subscription select[name="payment_type"]').val('')
 
           //delete data from inputs
           $('#items input[name="name"]').val('')

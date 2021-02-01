@@ -36,8 +36,8 @@
                     <div class="barcode">
                         <h4>{{ $subscription->customer->name }}</h4>
                         <div class="barcode-b">
-                            <p>{!! DNS1D::getBarcodeHTML(number_format($subscription->id), "C128",1.4,44, "black") !!}</p>
-                            <p>{{ $subscription->id }}</p>
+                            <p>{{ $subscription->plan->name }}</p>
+                            <p>{{ Modules\Subscription\Models\Subscription::PAYMENTS[$subscription->payment_type]}}</p>
                         </div>
                     </div>
                 </div>    
